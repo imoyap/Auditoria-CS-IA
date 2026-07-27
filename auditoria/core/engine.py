@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import time
-from typing import Any
+from typing import Any, Optional
 
 from auditoria.checks.base import BaseCheck
 from auditoria.checks.registry import get_checks, list_available_checks
@@ -17,9 +17,29 @@ class AuditEngine:
         self,
         target: str = "localhost",
         config: dict[str, Any] | None = None,
+        enable_ai: bool = False,
+        db_path: Optional[str] = None,
     ) -> None:
         self.target = target
         self.config = config or {}
+        self.enable_ai = enable_ai
+        self.db_manager = None
+        self.ai_analyzer = None
+
+        if db_path or config and config.get("persist_audits"):
+            try:
+                from auditoria.storage.database import DatabaseManager
+                db_path = db_path or config.get("db_path", "auditoria.db") if config else "auditoria.db"
+                self.db_manager = DatabaseManager(db_path)
+            except ImportError:
+                pass
+
+        if enable_ai:
+            try:
+                from auditoria.ai.analyzer import AuditAnalyzer
+                self.ai_analyzer = AuditAnalyzer()
+            except (ImportError, ValueError):
+                pass
 
     def run(
         self,
@@ -38,7 +58,44 @@ class AuditEngine:
             result = self._run_check(check_cls)
             report.results.append(result)
 
-        return report.finalize()
+        report = report.finalize()
+
+        if self.db_manager:
+            audit_id = self.db_manager.save_audit(report)
+            report.metadata["audit_id"] = audit_id
+
+            if self.ai_analyzer:
+                self._run_ai_analysis(audit_id, report)
+
+        return report
+
+    def _run_ai_analysis(self, audit_id: int, report: AuditReport) -> None:
+        """Ejecuta análisis de IA y guarda resultados."""
+        try:
+            if len(report.all_findings) > 0:
+                plan = self.ai_analyzer.prioritize_findings(report)
+                self.db_manager.save_ai_analysis(
+                    audit_id,
+                    "priority_plan",
+                    plan["priority_plan"],
+                )
+
+            if report.all_findings:
+                patterns = self.ai_analyzer.detect_patterns(report)
+                self.db_manager.save_ai_analysis(
+                    audit_id,
+                    "pattern_analysis",
+                    patterns["patterns"],
+                )
+
+            summary = self.ai_analyzer.generate_executive_summary(report)
+            self.db_manager.save_ai_analysis(
+                audit_id,
+                "executive_summary",
+                summary,
+            )
+        except Exception as e:
+            print(f"Advertencia: AI analysis falló: {e}")
 
     def _resolve_checks(
         self,
