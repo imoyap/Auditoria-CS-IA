@@ -1,0 +1,264 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Audit Report Specification",
+  "version": "1.0.0",
+  "description": "Formal specification for security audit reports (JSON canonical format)",
+  "type": "object",
+  "properties": {
+    "report_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+      "description": "Unique report identifier (UUID v4)"
+    },
+    "audit_id": {
+      "type": ["integer", "null"],
+      "description": "Database audit ID"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+      "description": "Parent audit run UUID"
+    },
+    "target": {
+      "type": "string",
+      "description": "Audit target (hostname, IP, domain)"
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "modules": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "scan_path": {
+          "type": "string"
+        },
+        "authorized_by": {
+          "type": "string"
+        },
+        "authorization_time": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "properties": {
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "finished_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duration_ms": {
+          "type": "number"
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "description": "Risk summary by severity",
+      "properties": {
+        "total_checks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "passed_checks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed_checks": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_findings": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "critical": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "high": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "medium": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "low": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "info": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "risk_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Composite risk score (0-100)"
+        }
+      },
+      "required": [
+        "total_findings",
+        "critical",
+        "high",
+        "medium",
+        "low",
+        "info",
+        "risk_score"
+      ]
+    },
+    "results": {
+      "type": "array",
+      "description": "Results per module",
+      "items": {
+        "type": "object",
+        "properties": {
+          "module": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "duration_ms": {
+            "type": "number"
+          },
+          "error": {
+            "type": ["object", "null"]
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "$ref": "finding.schema.json"
+            }
+          }
+        },
+        "required": ["module", "findings"]
+      }
+    },
+    "ai_enrichment": {
+      "type": ["object", "null"],
+      "description": "AI-generated insights about the audit",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "model_used": {
+          "type": "string"
+        },
+        "total_tokens_used": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_latency_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "analyses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["prioritize", "patterns", "executive_summary", "remediation"]
+              },
+              "content": {
+                "type": "string"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          }
+        },
+        "disclaimers": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "report_version": {
+          "type": "string",
+          "default": "1.0.0"
+        },
+        "schema_version": {
+          "type": "string",
+          "default": "1.0.0"
+        },
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "generated_by": {
+          "type": "string",
+          "description": "Component or user that generated this report"
+        },
+        "framework_version": {
+          "type": "string"
+        },
+        "python_version": {
+          "type": "string"
+        }
+      }
+    },
+    "compliance": {
+      "type": ["object", "null"],
+      "description": "Compliance assessment (if applicable)",
+      "properties": {
+        "framework": {
+          "type": "string",
+          "enum": ["CIS", "NIST", "PCI-DSS", "SOC2", "ISO27001"]
+        },
+        "controls_assessed": {
+          "type": "integer"
+        },
+        "controls_passed": {
+          "type": "integer"
+        },
+        "controls_failed": {
+          "type": "integer"
+        },
+        "compliance_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "limitations": {
+      "type": ["array", "null"],
+      "description": "Known limitations of this audit",
+      "items": {
+        "type": "string"
+      },
+      "examples": [
+        "SSL audit did not include deep cipher suite analysis",
+        "Filesystem scan excluded mounted network drives",
+        "Secrets scanning did not include binary analysis"
+      ]
+    }
+  },
+  "required": [
+    "report_id",
+    "run_id",
+    "target",
+    "execution",
+    "summary",
+    "results",
+    "metadata"
+  ],
+  "additionalProperties": false
+}
