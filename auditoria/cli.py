@@ -61,6 +61,17 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Solo exportar, sin salida en consola",
     )
+    audit.add_argument(
+        "--db-path",
+        type=Path,
+        default=Path("data/auditoria.db"),
+        help="Ruta de base de datos SQLite para persistencia (default: data/auditoria.db)",
+    )
+    audit.add_argument(
+        "--no-persist",
+        action="store_true",
+        help="Ejecutar auditoría sin guardar resultados a BD (solo reportes en memoria)",
+    )
 
     # list
     sub.add_parser("list", help="Listar módulos disponibles")
@@ -176,10 +187,24 @@ def cmd_audit(args: argparse.Namespace) -> int:
 
     config = {"scan_path": str(args.scan_path.resolve())}
 
+    # Determine persistence configuration
+    db_path = None if args.no_persist else str(args.db_path.resolve())
+
+    # If persistence enabled, ensure directory exists
+    if db_path:
+        db_dir = Path(db_path).parent
+        try:
+            db_dir.mkdir(parents=True, exist_ok=True)
+        except OSError as e:
+            print(f"Error: No se pudo crear directorio de BD: {db_dir}")
+            print(f"Detalle: {e}")
+            return 1
+
     engine = AuditEngine(
         target=args.target,
         config=config,
         enable_ai=getattr(args, "enable_ai", False),
+        db_path=db_path,
     )
     report = engine.run(modules=args.modules, categories=args.category)
 
