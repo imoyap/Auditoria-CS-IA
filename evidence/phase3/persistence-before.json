@@ -1,0 +1,13 @@
+{
+    "database_state":  {
+                           "expected":  1,
+                           "audits_rows":  0,
+                           "findings_rows":  0
+                       },
+    "bug_confirmed":  true,
+    "timestamp":  "2026-07-28T12:38:23Z",
+    "reason":  "CLI does not support --db-path parameter",
+    "next_action":  "Implement db_path argument in CLI",
+    "test_name":  "test_persistence_before_fix",
+    "status":  "FAIL"
+}

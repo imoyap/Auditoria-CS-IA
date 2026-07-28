@@ -1,0 +1,26 @@
+﻿============================================================
+TEST: Persistence Bug Reproduction
+============================================================
+
+[SETUP] Creating temporary database: C:\Users\c4all\AppData\Local\Temp\tmpzaknkllb\test-audit.db
+[SETUP] Database schema created
+
+[EXECUTE] Running: auditoria audit --modules system
+[EXECUTE] Exit code: 2
+[EXECUTE] Output:
+
+[EXECUTE] Stderr:
+usage: auditoria [-h] [--version]
+                 {audit,list,dashboard,report,mcp,schedule} ...
+auditoria: error: unrecognized arguments: --db-path C:\Users\c4all\AppData\Local\Temp\tmpzaknkllb\test-audit.db
+
+
+[VERIFY] Querying database...
+[VERIFY] Audits table: 0 rows
+[VERIFY] Findings table: 0 rows
+
+[ASSERT] Checking persistence...
+[ASSERT] ❌ FAIL: FAIL: Expected audits to be persisted, but found 0 rows
+
+============================================================
+RESULT: ❌ FAIL (Persistence is BROKEN)
