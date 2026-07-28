@@ -54,7 +54,7 @@ class DatabaseManager:
             status TEXT NOT NULL,
             recommendation TEXT,
             evidence TEXT,
-            references TEXT,
+            references_list TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (audit_id) REFERENCES audits(id)
         )
@@ -111,7 +111,7 @@ class DatabaseManager:
             cursor.execute("""
             INSERT INTO findings (
                 audit_id, check_id, title, description, severity, status,
-                recommendation, evidence, references
+                recommendation, evidence, references_list
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 audit_id,

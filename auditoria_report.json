@@ -1,0 +1,139 @@
+{
+  "target": "localhost",
+  "started_at": "2026-07-28T02:16:07.813767+00:00",
+  "finished_at": "2026-07-28T02:16:09.766721+00:00",
+  "risk_score": 62.5,
+  "summary": {
+    "critical": 0,
+    "high": 1,
+    "medium": 1,
+    "low": 0,
+    "info": 0,
+    "total_findings": 2,
+    "passed_checks": 2,
+    "failed_modules": 0
+  },
+  "metadata": {
+    "modules": [
+      "system",
+      "filesystem",
+      "secrets"
+    ],
+    "config_keys": [
+      "scan_path"
+    ]
+  },
+  "results": [
+    {
+      "module": "system",
+      "category": "sistema",
+      "duration_ms": 1509.74,
+      "error": null,
+      "findings": [
+        {
+          "check_id": "SYS-001",
+          "title": "Información del sistema operativo",
+          "description": "Sistema detectado: Windows 10 (10.0.26200)",
+          "severity": "info",
+          "status": "pass",
+          "recommendation": "Mantenga el sistema operativo actualizado con parches de seguridad.",
+          "evidence": {
+            "os": "Windows 10 (10.0.26200)",
+            "architecture": "AMD64"
+          },
+          "references": []
+        },
+        {
+          "check_id": "SYS-002",
+          "title": "Privilegios de ejecución",
+          "description": "La auditoría se ejecuta sin privilegios de administrador.",
+          "severity": "info",
+          "status": "pass",
+          "recommendation": "",
+          "evidence": {},
+          "references": []
+        },
+        {
+          "check_id": "SYS-003",
+          "title": "Estado del Firewall de Windows",
+          "description": "Firewall activo en todos los perfiles",
+          "severity": "info",
+          "status": "pass",
+          "recommendation": "Active el Firewall de Windows en perfiles Dominio, Privado y Público.",
+          "evidence": {
+            "firewall_output": "\nDomain Profile Settings: \n----------------------------------------------------------------------\nState                                 ON\n\nPrivate Profile Settings: \n----------------------------------------------------------------------\nState                                 ON\n\nPublic Profile Settings: \n----------------------------------------------------------------------\nState                                 ON\nOk.\n\n"
+          },
+          "references": [
+            "https://learn.microsoft.com/windows/security/operating-system-security/network-security/windows-firewall/"
+          ]
+        },
+        {
+          "check_id": "SYS-004",
+          "title": "Protección antivirus (Windows Defender)",
+          "description": "Windows Defender con protección en tiempo real activa",
+          "severity": "info",
+          "status": "pass",
+          "recommendation": "Active Windows Defender y la protección en tiempo real.",
+          "evidence": {
+            "defender_status": "{\n    \"AntivirusEnabled\":  true,\n    \"RealTimeProtectionEnabled\":  true\n}\n"
+          },
+          "references": []
+        }
+      ]
+    },
+    {
+      "module": "filesystem",
+      "category": "archivos",
+      "duration_ms": 36.11,
+      "error": null,
+      "findings": [
+        {
+          "check_id": "FS-001",
+          "title": "Archivos sensibles detectados",
+          "description": "Se encontraron 1 archivo(s) potencialmente sensibles.",
+          "severity": "medium",
+          "status": "warn",
+          "recommendation": "Restrinja permisos (chmod 600) y excluya archivos sensibles del control de versiones.",
+          "evidence": {
+            "files": [
+              "C:\\Users\\c4all\\Documents\\Auditoria-CS-IA\\venv_test\\Lib\\site-packages\\certifi\\cacert.pem"
+            ],
+            "total": 1
+          },
+          "references": []
+        }
+      ]
+    },
+    {
+      "module": "secrets",
+      "category": "secretos",
+      "duration_ms": 402.58,
+      "error": null,
+      "findings": [
+        {
+          "check_id": "SEC-001",
+          "title": "Posibles secretos expuestos",
+          "description": "Se detectaron 1 coincidencia(s) de patrones sensibles.",
+          "severity": "high",
+          "status": "fail",
+          "recommendation": "Revoke las credenciales, rote los secretos y use un gestor de secretos.",
+          "evidence": {
+            "matches": [
+              {
+                "type": "Generic API Key",
+                "file": "venv_test\\Lib\\site-packages\\anthropic\\lib\\credentials\\_constants.py",
+                "line": 38,
+                "severity": "high",
+                "preview": "API_***KEY\""
+              }
+            ],
+            "total": 1
+          },
+          "references": [
+            "https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/"
+          ]
+        }
+      ]
+    }
+  ]
+}
