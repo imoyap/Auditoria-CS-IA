@@ -1,0 +1,12 @@
+{
+    "database_state":  {
+                           "expected":  1,
+                           "audits_rows":  1,
+                           "findings_rows":  4
+                       },
+    "timestamp":  "2026-07-28T12:39:06Z",
+    "fix_applied":  "Added --db-path and --no-persist arguments to CLI",
+    "test_name":  "persistence_after_fix",
+    "status":  "PASS",
+    "notes":  "Audit persisted successfully with db_path parameter"
+}

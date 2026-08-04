@@ -1,0 +1,28 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+htmlcov/
+.coverage
+informe.json
+informe.html
+reports/
+
+# Sesión personal de Moodle (sesskey / datos de cuenta) — no se versiona
+docs/Instruccion.html
+docs/Instruccion_files/
+
+# Material de terceros con copyright (PDF originales) — se conservan solo
+# las transcripciones propias (docs/anexo_tecnico_u3.md, docs/rubrica_evaluacion_u3.md)
+docs/*.pdf
+
+# Captura duplicada — la versión válida vive en evidencias/raw/
+docs/image.png
+
+# Artefactos binarios / runtime del framework auditoria/ existente
+data/auditoria.db
+.claude/scheduled_tasks.lock

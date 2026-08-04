@@ -1,0 +1,26 @@
+# scope/allowlist.txt
+# Comandos permitidos para el rol RECON (capa 1 — recolección).
+# Formato: un patrón por línea, regex ancorado (^...$), sin comentarios en la
+# misma línea. El harness (harness/orquestador.py, T-009) y el hook
+# harness/controles/reject_and_log.sh (T-008) resuelven ${IP_AUTORIZADA} desde
+# scope/alcance.yaml campo objetivo.ip_autorizada en tiempo de ejecución — este
+# archivo nunca contiene el IP como literal.
+#
+# Regla de admisión: un comando de RECON se ejecuta solo si matchea EXACTAMENTE
+# uno de estos patrones. Cualquier otra cosa se rechaza y se registra como
+# RECHAZO en LEDGER.md (RC-1, RC-3, RC-4 de scope/alcance.yaml).
+#
+# Ninguna entrada usa módulos de explotación, fuerza bruta, ni flags que
+# modifiquen el estado del objetivo (RC-3: prohibición de explotación activa
+# e interrupción de servicio).
+#
+# Ver docs/tasks.md T-003, docs/requirements.md REQ-A-02.
+
+^nmap -sV -sC --script=banner -p- ${IP_AUTORIZADA}$
+^nmap -sV -p [0-9,-]+ ${IP_AUTORIZADA}$
+^nmap -sn ${IP_AUTORIZADA}$
+^nc -nvz ${IP_AUTORIZADA} [0-9]+$
+^nc -nv ${IP_AUTORIZADA} [0-9]+$
+^curl -sI http://${IP_AUTORIZADA}(:[0-9]+)?/?$
+^curl -s http://${IP_AUTORIZADA}(:[0-9]+)?/?$
+^nikto -h ${IP_AUTORIZADA}(-p [0-9]+)?$

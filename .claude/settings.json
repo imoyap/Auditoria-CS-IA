@@ -1,0 +1,67 @@
+{
+  "permissions": {
+    "global": {
+      "Bash": ["auditoria audit", "python -m auditoria", "git", "npm", "pip install"],
+      "PowerShell": ["Get-ChildItem", "Test-Path", "python"],
+      "Read": true,
+      "Edit": true,
+      "Write": true,
+      "Glob": true,
+      "Grep": true
+    }
+  },
+  "hooks": {
+    "before_read_file": [],
+    "after_edit_file": [
+      {
+        "pattern": "auditoria/**/*.py",
+        "command": "python -m pytest auditoria/tests/ -v --tb=short 2>/dev/null || true",
+        "description": "Run tests after code changes"
+      }
+    ],
+    "on_git_commit": [
+      {
+        "command": "python -m pytest tests/ -q",
+        "description": "Verify tests pass before commit"
+      }
+    ]
+  },
+  "environment": {
+    "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}",
+    "AUDITORIA_DB_PATH": "${AUDITORIA_DB_PATH:-auditoria.db}",
+    "AUDITORIA_API_PORT": "${AUDITORIA_API_PORT:-5000}"
+  },
+  "preferred_model": "claude-opus-5",
+  "fast_mode_enabled": true,
+  "suggestions": {
+    "enabled": true,
+    "min_complexity": "medium"
+  },
+  "integrations": {
+    "mcp_servers": [
+      {
+        "name": "auditoria",
+        "description": "Auditoria Security Audit Framework",
+        "command": "python",
+        "args": ["-m", "auditoria.mcp.server"],
+        "env": {
+          "PYTHONPATH": "."
+        }
+      }
+    ]
+  },
+  "project": {
+    "name": "Auditoria-CS-IA",
+    "description": "Framework modular de auditoría de ciberseguridad asistida por IA",
+    "root": ".",
+    "language": "python",
+    "version": "1.0.0"
+  },
+  "cli": {
+    "aliases": {
+      "qa": "auditoria audit --enable-ai",
+      "status": "auditoria schedule list",
+      "api": "python run_api.py"
+    }
+  }
+}

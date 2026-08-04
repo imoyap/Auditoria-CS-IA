@@ -1,0 +1,64 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.11.9, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\c4all\Documents\Auditoria-CS-IA\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\c4all\Documents\Auditoria-CS-IA
+configfile: pyproject.toml
+plugins: anyio-4.14.2, cov-7.1.0
+collecting ... collected 10 items
+
+tests/e2e/test_local_audit_flow.py::TestE2EAuditFlow::test_e2e_happy_path_with_persistence FAILED [ 10%]
+tests/e2e/test_local_audit_flow.py::TestE2EAuditFlow::test_e2e_multi_module_audit FAILED [ 20%]
+tests/e2e/test_local_audit_flow.py::TestE2EAuditFlow::test_e2e_persistence_isolation PASSED [ 30%]
+tests/e2e/test_local_audit_flow.py::TestE2EAuditFlow::test_e2e_report_generation_json PASSED [ 40%]
+tests/e2e/test_local_audit_flow.py::TestE2EAuditFlow::test_e2e_degradation_without_ai PASSED [ 50%]
+tests/e2e/test_local_audit_flow.py::TestE2EAuditFlow::test_e2e_degradation_without_persistence PASSED [ 60%]
+tests/e2e/test_local_audit_flow.py::TestE2EAuditFlow::test_e2e_error_handling_invalid_module FAILED [ 70%]
+tests/e2e/test_local_audit_flow.py::TestE2EAuditFlow::test_e2e_evidence_captured FAILED [ 80%]
+tests/e2e/test_local_audit_flow.py::TestE2EAuditFlow::test_e2e_reproducibility FAILED [ 90%]
+tests/e2e/test_local_audit_flow.py::TestE2EAuditFlow::test_e2e_database_integrity PASSED [100%]
+
+================================== FAILURES ===================================
+____________ TestE2EAuditFlow.test_e2e_happy_path_with_persistence ____________
+tests\e2e\test_local_audit_flow.py:101: in test_e2e_happy_path_with_persistence
+    assert "risk_score" in report.summary, "Summary should have risk_score"
+E   AssertionError: Summary should have risk_score
+E   assert 'risk_score' in {'critical': 0, 'high': 0, 'medium': 0, 'low': 0, ...}
+E    +  where {'critical': 0, 'high': 0, 'medium': 0, 'low': 0, ...} = AuditReport(target='localhost', started_at=datetime.datetime(2026, 7, 28, 16, 41, 40, 675358, tzinfo=datetime.timezone.utc), finished_at=datetime.datetime(2026, 7, 28, 16, 41, 41, 926541, tzinfo=datetime.timezone.utc), results=[CheckResult(module='system', category='sistema', findings=[Finding(check_id='SYS-001', title='Información del sistema operativo', description='Sistema detectado: Windows 10 (10.0.26200)', severity=<Severity.INFO: 'info'>, status=<Status.PASS: 'pass'>, recommendation='Mantenga el sistema operativo actualizado con parches de seguridad.', evidence={'os': 'Windows 10 (10.0.26200)', 'architecture': 'AMD64'}, references=[]), Finding(check_id='SYS-002', title='Privilegios de ejecución', description='La auditoría se ejecuta sin privilegios de administrador.', severity=<Severity.INFO: 'info'>, status=<Status.PASS: 'pass'>, recommendation='', evidence={}, references=[]), Finding(check_id='SYS-003', title='Estado del Firewall de Windows', description='Firewall activo en todos los perfiles', severity=<Severity.INFO: 'info'>, status=<Status.PASS: 'pass'>, recommendation='Active el Firewall de Windows en perfiles Dominio, Privado y Público.', evidence={'firewall_output': '\nDomain Profile Settings: \n----------------------------------------------------------------------\nState                                 ON\n\nPrivate Profile Settings: \n----------------------------------------------------------------------\nState                                 ON\n\nPublic Profile Settings: \n----------------------------------------------------------------------\nState                                 ON\nOk.\n\n'}, references=['https://learn.microsoft.com/windows/security/operating-system-security/network-security/windows-firewall/']), Finding(check_id='SYS-004', title='Protección antivirus (Windows Defender)', description='Windows Defender con protección en tiempo real activa', severity=<Severity.INFO: 'info'>, status=<Status.PASS: 'pass'>, recommendation='Active Windows Defender y la protección en tiempo real.', evidence={'defender_status': '{\n    "AntivirusEnabled":  true,\n    "RealTimeProtectionEnabled":  true\n}\n'}, references=[])], duration_ms=1235.53, error=None)], metadata={'modules': ['system'], 'config_keys': ['scan_path'], 'audit_id': 1}).summary
+________________ TestE2EAuditFlow.test_e2e_multi_module_audit _________________
+tests\e2e\test_local_audit_flow.py:118: in test_e2e_multi_module_audit
+    module_names = [r["module"] for r in report.results]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_local_audit_flow.py:118: in <listcomp>
+    module_names = [r["module"] for r in report.results]
+                    ^^^^^^^^^^^
+E   TypeError: 'CheckResult' object is not subscriptable
+___________ TestE2EAuditFlow.test_e2e_error_handling_invalid_module ___________
+tests\e2e\test_local_audit_flow.py:237: in test_e2e_error_handling_invalid_module
+    report = engine.run(modules=["nonexistent_module"])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+auditoria\core\engine.py:55: in run
+    checks = self._resolve_checks(modules, categories)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+auditoria\core\engine.py:111: in _resolve_checks
+    raise ValueError(
+E   ValueError: Módulo desconocido: 'nonexistent_module'. Disponibles: filesystem, network, secrets, ssl, system
+_________________ TestE2EAuditFlow.test_e2e_evidence_captured _________________
+tests\e2e\test_local_audit_flow.py:255: in test_e2e_evidence_captured
+    assert "evidence" in finding or finding.get("status") != "fail", \
+           ^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: argument of type 'Finding' is not iterable
+__________________ TestE2EAuditFlow.test_e2e_reproducibility __________________
+tests\e2e\test_local_audit_flow.py:285: in test_e2e_reproducibility
+    checks1 = {f["check_id"] for f in report1.all_findings}
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\e2e\test_local_audit_flow.py:285: in <setcomp>
+    checks1 = {f["check_id"] for f in report1.all_findings}
+               ^^^^^^^^^^^^^
+E   TypeError: 'Finding' object is not subscriptable
+=========================== short test summary info ===========================
+FAILED tests/e2e/test_local_audit_flow.py::TestE2EAuditFlow::test_e2e_happy_path_with_persistence
+FAILED tests/e2e/test_local_audit_flow.py::TestE2EAuditFlow::test_e2e_multi_module_audit
+FAILED tests/e2e/test_local_audit_flow.py::TestE2EAuditFlow::test_e2e_error_handling_invalid_module
+FAILED tests/e2e/test_local_audit_flow.py::TestE2EAuditFlow::test_e2e_evidence_captured
+FAILED tests/e2e/test_local_audit_flow.py::TestE2EAuditFlow::test_e2e_reproducibility
+======================== 5 failed, 5 passed in 14.15s =========================

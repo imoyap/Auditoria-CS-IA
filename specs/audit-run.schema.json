@@ -1,0 +1,229 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Audit Run Specification",
+  "version": "1.0.0",
+  "description": "Formal specification for audit execution parameters and lifecycle",
+  "type": "object",
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+      "description": "UUID v4 unique audit run identifier, generated at execution start"
+    },
+    "audit_id": {
+      "type": ["integer", "null"],
+      "description": "Database audit ID (null until persisted)"
+    },
+    "target": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "description": "Audit target: hostname, IP address, domain, or 'localhost'. Required.",
+      "examples": ["localhost", "192.168.1.1", "example.com", "server.example.com"]
+    },
+    "scope": {
+      "type": "object",
+      "description": "Audit scope definition",
+      "properties": {
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["system", "network", "ssl", "filesystem", "secrets"]
+          },
+          "minItems": 1,
+          "maxItems": 5,
+          "description": "Modules to execute. If empty, all available modules execute.",
+          "default": ["system", "network", "ssl", "filesystem", "secrets"]
+        },
+        "categories": {
+          "type": ["array", "null"],
+          "items": { "type": "string" },
+          "description": "Optional category filter (e.g., ['sistema', 'red'])"
+        },
+        "scan_path": {
+          "type": "string",
+          "default": ".",
+          "description": "Root path for filesystem and secrets scanning"
+        },
+        "authorized_by": {
+          "type": "string",
+          "description": "Username or system principal authorizing this audit"
+        },
+        "authorization_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when authorization was granted"
+        }
+      },
+      "required": ["modules"],
+      "additionalProperties": false
+    },
+    "execution": {
+      "type": "object",
+      "description": "Execution parameters and state",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": ["queued", "running", "completed", "failed", "cancelled"],
+          "description": "Current execution state"
+        },
+        "started_at": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when execution started"
+        },
+        "finished_at": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when execution finished"
+        },
+        "duration_ms": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "description": "Total execution time in milliseconds (calculated as finished_at - started_at)"
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "default": 300000,
+          "minimum": 1000,
+          "maximum": 3600000,
+          "description": "Maximum allowed execution time (1s to 1h)"
+        }
+      },
+      "required": ["state"],
+      "additionalProperties": false
+    },
+    "ai_config": {
+      "type": "object",
+      "description": "Artificial intelligence enrichment configuration",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to use AI for analysis"
+        },
+        "model": {
+          "type": "string",
+          "default": "claude-opus-4-1-20250805",
+          "description": "Claude model identifier for analysis"
+        },
+        "analysis_types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["prioritize", "patterns", "executive_summary", "remediation"]
+          },
+          "description": "Types of AI analysis to perform"
+        },
+        "confidence_threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.7,
+          "description": "Minimum confidence score for AI recommendations (0.0-1.0)"
+        }
+      },
+      "additionalProperties": false
+    },
+    "output": {
+      "type": "object",
+      "description": "Output configuration",
+      "properties": {
+        "formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["json", "html", "markdown", "console"]
+          },
+          "default": ["json", "html"],
+          "description": "Desired output formats"
+        },
+        "persist_to_db": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to persist results to SQLite database"
+        },
+        "output_files": {
+          "type": "object",
+          "description": "Output file paths by format",
+          "properties": {
+            "json": { "type": "string" },
+            "html": { "type": "string" },
+            "markdown": { "type": "string" }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "error": {
+      "type": ["object", "null"],
+      "description": "Error information if execution failed",
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": ["TIMEOUT", "AUTHORIZATION_FAILED", "MODULE_ERROR", "STORAGE_ERROR", "UNKNOWN"]
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "object"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["code", "message"]
+    },
+    "result_summary": {
+      "type": ["object", "null"],
+      "description": "Summary of audit results (populated after execution)",
+      "properties": {
+        "total_checks": { "type": "integer" },
+        "passed_checks": { "type": "integer" },
+        "failed_checks": { "type": "integer" },
+        "total_findings": { "type": "integer" },
+        "critical_findings": { "type": "integer" },
+        "high_findings": { "type": "integer" },
+        "medium_findings": { "type": "integer" },
+        "low_findings": { "type": "integer" },
+        "info_findings": { "type": "integer" },
+        "risk_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    }
+  },
+  "required": ["run_id", "target", "scope", "execution"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "run_id": "550e8400-e29b-41d4-a716-446655440000",
+      "audit_id": null,
+      "target": "localhost",
+      "scope": {
+        "modules": ["system", "network"],
+        "scan_path": ".",
+        "authorized_by": "admin",
+        "authorization_time": "2026-07-28T14:50:00Z"
+      },
+      "execution": {
+        "state": "completed",
+        "started_at": "2026-07-28T14:50:05Z",
+        "finished_at": "2026-07-28T14:50:06Z",
+        "duration_ms": 1124.62
+      },
+      "ai_config": {
+        "enabled": false
+      },
+      "output": {
+        "formats": ["json", "html"],
+        "persist_to_db": true
+      }
+    }
+  ]
+}

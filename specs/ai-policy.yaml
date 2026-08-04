@@ -1,0 +1,319 @@
+# AI Integration Policy
+# Version: 1.0.0
+# Defines constraints, usage rules, and safety guardrails for AI-assisted auditing
+# Date: 2026-07-28
+
+---
+policy_version: "1.0.0"
+effective_date: "2026-07-28"
+last_updated: "2026-07-28"
+status: "DRAFT"  # Must be formally approved before enforcement
+
+# ============================================================================
+# I. AI USAGE MODES
+# ============================================================================
+usage_modes:
+  - name: "deterministic_audit"
+    description: "Audit execution without AI enrichment"
+    ai_enabled: false
+    ai_calls_allowed: 0
+    required_api_key: false
+    fallback_behavior: "N/A - does not use AI"
+    recommended_for: "Security-critical audits, offline operation"
+
+  - name: "enriched_audit"
+    description: "Audit with optional AI analysis of findings"
+    ai_enabled: true
+    ai_calls_allowed: 1  # Per audit run
+    required_api_key: true
+    fallback_behavior: "Skip AI, return deterministic findings only"
+    recommended_for: "Advisory audits, trend analysis"
+
+  - name: "ai_only"
+    description: "AI-powered analysis of existing findings"
+    ai_enabled: true
+    ai_calls_allowed: "unlimited"  # Per finding
+    required_api_key: true
+    fallback_behavior: "Fail gracefully with warning"
+    recommended_for: "Post-audit analysis, batch processing"
+
+# ============================================================================
+# II. AI CAPABILITIES AND CONSTRAINTS
+# ============================================================================
+ai_capabilities:
+  models:
+    - id: "claude-opus-4-1-20250805"
+      vendor: "Anthropic"
+      role: "default analysis model"
+      max_tokens_input: 200000
+      max_tokens_output: 4096
+      recommended_for: "complex reasoning, priority analysis"
+
+  analysis_types:
+    - id: "prioritize"
+      description: "Rank findings by business impact"
+      input: "findings_list"
+      output: "ranked_findings"
+      max_findings: 50
+      timeout_seconds: 30
+      confidence_requirement: 0.7  # Min 70% confidence
+
+    - id: "patterns"
+      description: "Detect patterns across multiple findings"
+      input: "findings_list"
+      output: "patterns_detected"
+      max_findings: 100
+      timeout_seconds: 45
+      confidence_requirement: 0.8
+
+    - id: "executive_summary"
+      description: "Generate high-level summary for stakeholders"
+      input: "findings_list"
+      output: "summary_text"
+      max_findings: 100
+      timeout_seconds: 30
+      confidence_requirement: 0.6
+
+    - id: "remediation"
+      description: "Suggest remediation steps"
+      input: "single_finding"
+      output: "remediation_plan"
+      timeout_seconds: 20
+      confidence_requirement: 0.7
+
+# ============================================================================
+# III. STRICT GUARDRAILS
+# ============================================================================
+guardrails:
+  findings_authority:
+    rule: "AI cannot create findings without evidence"
+    enforcement: "STRICT"
+    description: "Every finding must originate from deterministic checks. AI can only enrich or prioritize existing findings."
+    consequence: "Finding rejected if no evidence present"
+
+  severity_immutability:
+    rule: "AI cannot change finding severity"
+    enforcement: "STRICT"
+    description: "Severity is determined by deterministic rules. AI can recommend re-evaluation but cannot modify stored value."
+    consequence: "Recommendation logged separately; severity unchanged"
+
+  evidence_protection:
+    rule: "AI cannot sanitize or suppress evidence"
+    enforcement: "STRICT"
+    description: "Original evidence must remain unchanged. AI cannot hide data or claim issues do not exist."
+    consequence: "Log attempt; alert security team"
+
+  false_positive_authority:
+    rule: "Only humans can mark findings as false positives"
+    enforcement: "STRICT"
+    description: "AI can suggest false positive classification but cannot auto-suppress findings."
+    consequence: "Recommendation created; human review required"
+
+  confirmation_authority:
+    rule: "Only humans can mark findings as 'confirmed'"
+    enforcement: "STRICT"
+    description: "AI analysis is advisory. Human review required for confirmation."
+    consequence: "AI analysis tagged 'unreviewed'; requires manual confirmation"
+
+# ============================================================================
+# IV. DATA HANDLING AND PRIVACY
+# ============================================================================
+data_handling:
+  sensitive_data:
+    - category: "credentials"
+      examples: ["passwords", "API keys", "tokens", "secrets"]
+      ai_handling: "PROHIBITED"
+      consequence: "Sanitize before sending to AI"
+      sanitization_method: "redact_with_placeholder"
+
+    - category: "pii"
+      examples: ["usernames", "email addresses", "IP addresses"]
+      ai_handling: "MINIMIZED"
+      consequence: "Only send hashes or generalized references"
+      sanitization_method: "hash_or_generalize"
+
+    - category: "business_confidential"
+      examples: ["service names", "internal architectures"]
+      ai_handling: "PERMITTED_WITH_WARNING"
+      consequence: "Log disclaimer; user acknowledges risk"
+      sanitization_method: "none_but_warning_logged"
+
+    - category: "technical_evidence"
+      examples: ["open ports", "outdated software", "misconfigurations"]
+      ai_handling: "PERMITTED"
+      consequence: "Safe to send for analysis"
+      sanitization_method: "none"
+
+  retention:
+    ai_prompts_stored: false
+    ai_responses_cached: true
+    cache_expiry_days: 30
+    deletion_on_request: true
+
+  third_party_access:
+    anthropic_api: "Cloud API (Anthropic servers)"
+    data_sent: "Only findings, evidence hashes, and audit metadata"
+    data_returned: "Analysis text only"
+    pii_protection: "Sanitized before transmission"
+    audit_logging: "Enabled; all API calls logged"
+
+# ============================================================================
+# V. ERROR HANDLING AND DEGRADATION
+# ============================================================================
+error_handling:
+  api_key_missing:
+    state: "AI disabled"
+    action: "Continue with deterministic audit only"
+    user_notification: "WARN"
+    consequence: "No AI enrichment in report"
+
+  api_key_invalid:
+    state: "AI disabled"
+    action: "Continue with deterministic audit only"
+    user_notification: "ERROR"
+    consequence: "Audit completes; recommendations incomplete"
+
+  rate_limit_exceeded:
+    state: "AI paused"
+    action: "Retry with exponential backoff (max 3 attempts)"
+    backoff_seconds: [1, 5, 30]
+    user_notification: "WARN"
+    consequence: "Some findings not enriched; partial report"
+
+  timeout:
+    threshold_seconds: 60
+    action: "Cancel AI request; continue with existing findings"
+    user_notification: "WARN"
+    consequence: "Findings present but not enriched"
+
+  invalid_response:
+    action: "Log error; mark finding as 'analysis_failed'"
+    user_notification: "WARN"
+    consequence: "Finding retained; AI analysis discarded"
+
+  quota_exceeded:
+    action: "Stop AI processing; complete audit with deterministic findings"
+    user_notification: "ERROR"
+    consequence: "No AI enrichment for remaining findings"
+
+# ============================================================================
+# VI. AUDIT TRAIL AND COMPLIANCE
+# ============================================================================
+audit_trail:
+  ai_calls_logged: true
+  log_fields:
+    - timestamp
+    - analysis_type
+    - input_findings_count
+    - output_confidence
+    - tokens_used
+    - latency_ms
+    - error_if_any
+    - human_reviewer  # If reviewed later
+
+  retention_policy: "indefinite"  # Keep for forensics and compliance
+  access_control: "security_team_only"
+  pii_handling: "redacted_in_logs"
+
+  transparency:
+    report_includes_ai_disclaimer: true
+    report_marks_ai_content: true
+    report_shows_confidence_scores: true
+    report_links_to_human_review: true
+
+# ============================================================================
+# VII. POLICY VIOLATIONS AND ENFORCEMENT
+# ============================================================================
+violations:
+  - violation: "AI creates finding without evidence"
+    severity: "CRITICAL"
+    action: "Reject finding; alert security team; disable AI"
+    recovery: "Manual review required before re-enabling"
+
+  - violation: "AI changes finding severity"
+    severity: "HIGH"
+    action: "Restore severity; log attempt; require human review"
+    recovery: "Review and explicit approval needed"
+
+  - violation: "AI sends sensitive data unsanitized"
+    severity: "CRITICAL"
+    action: "Halt AI calls; audit data sent; notify privacy team"
+    recovery: "Fix sanitization logic; audit transmission"
+
+  - violation: "AI marks finding as confirmed without human approval"
+    severity: "HIGH"
+    action: "Revert confirmation status; log attempt"
+    recovery: "Manual human review required"
+
+  - violation: "API key exposed in logs"
+    severity: "CRITICAL"
+    action: "Rotate key; audit access logs; notify security"
+    recovery: "Deploy new key; review all access"
+
+# ============================================================================
+# VIII. METRICS AND MONITORING
+# ============================================================================
+monitoring:
+  metrics_collected:
+    - ai_calls_per_audit
+    - tokens_consumed_total
+    - token_cost_usd
+    - api_latency_ms
+    - error_rate_percent
+    - confidence_score_distribution
+    - findings_enriched_percent
+    - human_review_rate_percent
+
+  performance_thresholds:
+    max_api_latency_ms: 120000  # 2 minutes
+    max_tokens_per_audit: 50000
+    max_error_rate_percent: 5
+    min_confidence_for_recommendations: 0.6
+
+  alerting:
+    - condition: "error_rate > 10%"
+      action: "disable_ai_temporarily"
+      notification: "security_team"
+      resolution_time_sla_hours: 4
+
+    - condition: "api_latency > 120s"
+      action: "log_warning"
+      notification: "ops_team"
+      resolution_time_sla_hours: 8
+
+    - condition: "cost exceeds budget"
+      action: "throttle_ai_requests"
+      notification: "finance_security"
+      resolution_time_sla_hours: 1
+
+# ============================================================================
+# IX. APPROVAL AND GOVERNANCE
+# ============================================================================
+governance:
+  policy_owner: "Security Architecture"
+  policy_approver: "CISO (required)"
+  review_frequency: "quarterly"
+  last_approved: "PENDING"
+  approvers_required: 1
+  stakeholders:
+    - role: "Security Team"
+      concern: "Accuracy, false positives"
+    - role: "Compliance"
+      concern: "Regulatory reporting, audit trail"
+    - role: "Privacy"
+      concern: "Data handling, GDPR compliance"
+    - role: "Finance"
+      concern: "API costs, budget"
+
+# ============================================================================
+# X. FUTURE AMENDMENTS
+# ============================================================================
+future_considerations:
+  - "Model fine-tuning with internal audit data (require data governance)"
+  - "Multi-model ensemble voting (improve confidence)"
+  - "Feedback loop for continuous improvement (require human-labeled data)"
+  - "Federated learning for cross-org benchmarking (requires data privacy agreements)"
+  - "Custom Claude mode for domain-specific knowledge (requires licensing)"
+
+---
+# END OF AI POLICY

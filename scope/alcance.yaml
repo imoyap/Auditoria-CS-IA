@@ -1,0 +1,103 @@
+# scope/alcance.yaml
+# Fuente única del alcance autorizado. Ningún otro archivo del repositorio debe
+# declarar el IP objetivo como literal — todo lo que lo necesite lo lee de aquí.
+# Ver docs/tasks.md T-002, docs/requirements.md REQ-A-01.
+
+version: 1
+
+encargo:
+  cliente: "Comercial Andes Sur SpA"
+  giro: "Distribuidora regional de productos de consumo, con canal e-commerce propio"
+  ubicacion: "Chillán, Región de Ñuble"
+  dotacion: 140
+  datos_que_trata: "Datos personales de clientes (nombre, RUT, dirección, teléfono, historial de compra); datos de trabajadores incluyendo licencias médicas (dato sensible)"
+  calificacion_oiv: "No calificada por la ANCI a la fecha del encargo"
+  certificaciones_vigentes: "Ninguna. La gerencia evalúa iniciar un SGSI bajo ISO/IEC 27001:2022"
+  fuente: "docs/Instruccion.html, líneas 2764-2862 (tabla del encargo)"
+
+activo:
+  nombre_logico: "SRV-ADM-01"
+  descripcion: "Servidor de administración interna, alcanzable desde la red corporativa plana"
+  representado_en_laboratorio_por: "Metasploitable2"
+  fuente: "docs/Instruccion.html, línea 2738 y líneas 2840-2842"
+
+objetivo:
+  ip_autorizada: "192.168.56.117"
+  red: "192.168.56.0/24 (host-only, red de laboratorio aislada)"
+  mecanismo_de_autorizacion: >
+    El curso no publica una lista de IP por grupo. La regla, tal como aparece en
+    docs/Instruccion.html línea 2842, es "la dirección ip que Usted vea como
+    asignada, como ejemplo 192.168.56.101" — 192.168.56.101 es únicamente el
+    ejemplo de la plantilla, no el IP de este grupo (ver docs/GAP_ANALYSIS.md §0.1
+    y LEDGER.md LDG-002).
+  evidencia_de_ip_observado:
+    archivo: "evidencias/raw/g0-ifconfig-metasploitable2-192.168.56.117.png"
+    sha256: "5118d84f516a610057c7de49d207cc69b14ff60c6a7790e60760d164726f105f"
+    manifiesto: "evidencias/manifest.sha256"
+    descripcion: "Captura de ifconfig dentro de la VM Metasploitable2 del grupo, ventana \"METAEXPLOITABLE [Corriendo] - Oracle VirtualBox\", muestra eth0 con inet 192.168.56.117/24"
+    ledger_ref: "LDG-003"
+  respaldo_pendiente: >
+    No existe (ni el curso lo exige) un documento firmado por el docente que liste
+    192.168.56.117 específicamente. El respaldo es el mecanismo descrito arriba más
+    la evidencia_de_ip_observado. Ver LEDGER.md LDG-003 y docs/requirements.md
+    REQ-A-01 para la justificación completa antes de dar este campo por cerrado en
+    la firma humana de gates/G0.md.
+
+ventana_de_trabajo:
+  descripcion: "Ventana de trabajo acotada, según restricción del cliente"
+  fuente: "docs/Instruccion.html, línea 2858"
+  fecha_inicio: "A DEFINIR POR EL GRUPO — fecha/hora real de la sesión de laboratorio autorizada"
+  fecha_fin: "A DEFINIR POR EL GRUPO"
+  nota: >
+    No se rellena con una fecha inventada. gates/G0.md no puede cerrarse con este
+    campo en estado "A DEFINIR" — es responsabilidad del grupo completarlo con la
+    ventana real antes de la firma humana de G0.
+
+criterio_de_auditoria:
+  marcos:
+    - "ISO/IEC 27001:2022 Anexo A"
+    - "NIST CSF 2.0"
+    - "Normativa chilena aplicable al cliente: Ley 21.663 (Marco de Ciberseguridad, ANCI), Ley 21.719 (datos personales), Ley 21.459 (delitos informáticos)"
+  fuente: "docs/anexo_tecnico_u3.md §1"
+
+restricciones:
+  - id: "RESTR-01"
+    descripcion: "No se autoriza explotación activa"
+    fuente: "docs/Instruccion.html, línea 2858"
+  - id: "RESTR-02"
+    descripcion: "No se autoriza interrupción del servicio"
+    fuente: "docs/Instruccion.html, línea 2858"
+
+reglas_de_compromiso:
+  # Aprobadas en LEDGER.md LDG-004, definición propia del grupo — ninguna proviene
+  # literalmente del Anexo Técnico U3 (ver docs/PROPUESTA_RC_D_VIDEO.md §1).
+  - id: "RC-1"
+    nombre: "Alcance exclusivo"
+    regla: "Toda operación se dirige únicamente a objetivo.ip_autorizada. Cualquier destino distinto aborta la ejecución y se registra como RECHAZO."
+    verificacion: "automática (allowlist + verificación de destino, T-003, T-008)"
+    fuente: "NIST SP 800-115 §3.2; criterio de cierre de G0, Anexo §5"
+  - id: "RC-2"
+    nombre: "Ventana de trabajo acotada"
+    regla: "La ejecución solo ocurre dentro de ventana_de_trabajo. Fuera de ella, el harness rechaza iniciar el BoundedLoop."
+    verificacion: "documental (declaración en este archivo + revisión del harness)"
+    fuente: "docs/Instruccion.html línea 2858; PTES (Pre-engagement)"
+  - id: "RC-3"
+    nombre: "Prohibición de explotación activa e interrupción de servicio"
+    regla: "Ningún rol invoca módulos de explotación. RECON opera solo con herramientas de reconocimiento de scope/allowlist.txt en modo no destructivo."
+    verificacion: "automática (allowlist)"
+    fuente: "docs/Instruccion.html línea 2858; condición de reprobación automática de la rúbrica"
+  - id: "RC-4"
+    nombre: "Condición de aborto"
+    regla: "Cualquier comando fuera de allowlist, señal de inestabilidad del objetivo, o agotamiento del tope de iteraciones del BoundedLoop detiene la ejecución de inmediato."
+    verificacion: "automática (harness, T-009)"
+    fuente: "OSSTMM 3 (regla de no dañar); Anexo §5, criterio de cierre de G1"
+  - id: "RC-5"
+    nombre: "Manejo de evidencia y confidencialidad"
+    regla: "Toda evidencia cruda y todo hallazgo se tratan como confidenciales del cliente ficticio; no se publican fuera del repositorio de entrega del grupo y el docente."
+    verificacion: "documental"
+    fuente: "ISO 19011:2018, principio de confidencialidad; Anexo §1"
+  - id: "RC-6"
+    nombre: "Escalamiento"
+    regla: "Ante un hallazgo de riesgo Crítico o Inaceptable (banda >= 15, Anexo §11), o ante cualquier incidente durante la ejecución, se registra en el ledger y se comunica al docente antes de continuar."
+    verificacion: "documental + registro en LEDGER.md"
+    fuente: "Anexo §2 ('Dónde está el humano'); apetito de riesgo del cliente, Anexo §11"

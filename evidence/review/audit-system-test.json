@@ -1,0 +1,83 @@
+{
+  "target": "localhost",
+  "started_at": "2026-07-28T14:50:05.720740+00:00",
+  "finished_at": "2026-07-28T14:50:06.845187+00:00",
+  "risk_score": 0.0,
+  "summary": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "info": 0,
+    "total_findings": 0,
+    "passed_checks": 1,
+    "failed_modules": 0
+  },
+  "metadata": {
+    "modules": [
+      "system"
+    ],
+    "config_keys": [
+      "scan_path"
+    ]
+  },
+  "results": [
+    {
+      "module": "system",
+      "category": "sistema",
+      "duration_ms": 1124.62,
+      "error": null,
+      "findings": [
+        {
+          "check_id": "SYS-001",
+          "title": "Información del sistema operativo",
+          "description": "Sistema detectado: Windows 10 (10.0.26200)",
+          "severity": "info",
+          "status": "pass",
+          "recommendation": "Mantenga el sistema operativo actualizado con parches de seguridad.",
+          "evidence": {
+            "os": "Windows 10 (10.0.26200)",
+            "architecture": "AMD64"
+          },
+          "references": []
+        },
+        {
+          "check_id": "SYS-002",
+          "title": "Privilegios de ejecución",
+          "description": "La auditoría se ejecuta sin privilegios de administrador.",
+          "severity": "info",
+          "status": "pass",
+          "recommendation": "",
+          "evidence": {},
+          "references": []
+        },
+        {
+          "check_id": "SYS-003",
+          "title": "Estado del Firewall de Windows",
+          "description": "Firewall activo en todos los perfiles",
+          "severity": "info",
+          "status": "pass",
+          "recommendation": "Active el Firewall de Windows en perfiles Dominio, Privado y Público.",
+          "evidence": {
+            "firewall_output": "\nDomain Profile Settings: \n----------------------------------------------------------------------\nState                                 ON\n\nPrivate Profile Settings: \n----------------------------------------------------------------------\nState                                 ON\n\nPublic Profile Settings: \n----------------------------------------------------------------------\nState                                 ON\nOk.\n\n"
+          },
+          "references": [
+            "https://learn.microsoft.com/windows/security/operating-system-security/network-security/windows-firewall/"
+          ]
+        },
+        {
+          "check_id": "SYS-004",
+          "title": "Protección antivirus (Windows Defender)",
+          "description": "Windows Defender con protección en tiempo real activa",
+          "severity": "info",
+          "status": "pass",
+          "recommendation": "Active Windows Defender y la protección en tiempo real.",
+          "evidence": {
+            "defender_status": "{\n    \"AntivirusEnabled\":  true,\n    \"RealTimeProtectionEnabled\":  true\n}\n"
+          },
+          "references": []
+        }
+      ]
+    }
+  ]
+}

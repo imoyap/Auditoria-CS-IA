@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # Main audit API service
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - AUDITORIA_DB_PATH=/app/data/auditoria.db
+      - AUDITORIA_API_PORT=5000
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    depends_on:
+      - postgres
+    command: python scripts/run_api.py --host 0.0.0.0 --port 5000
+
+  # PostgreSQL database (optional, for production)
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: auditoria
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-dev-password}
+      POSTGRES_DB: auditoria
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # Prometheus for metrics
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+  # Grafana for dashboards
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+  # Redis for caching/queue (optional)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  prometheus_data:
+  grafana_data:
+  redis_data:
+
+networks:
+  default:
+    name: auditoria-network
