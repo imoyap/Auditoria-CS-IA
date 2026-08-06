@@ -40,6 +40,7 @@
 | **T-014** | **G1 CERRADO.** Bug real encontrado y corregido en el camino: Python en Windows corrompía manifest.sha256 con \r colgantes (newline="" agregado a 3 scripts) | `LDG-050`, `LDG-051` |
 | **T-015** | **G2 CERRADO.** `normalizado/inventario.json` real: 30 servicios, 0 sin línea de origen, verificado cruzado contra el crudo (vsftpd línea 6, telnet línea 10) | `LDG-052` |
 | **T-021** | **4 candidatos reales propuestos por ANALISTA** (H-01 bindshell, H-02 vsftpd/CVE-2011-2523, H-03 UnrealIRCd/CVE-2010-2075, H-04 distccd/CVE-2004-2687), CWE vía MCP real, todos en estado PROPUESTO | `LDG-053`, `LDG-054` |
+| **T-024, T-025** | **VERIFICADOR real revisó los 4 candidatos citando línea de origen**: H-01 bindshell → `VALIDADO_PROPUESTO` (dos artefactos independientes, L38+L39, sin explotación); H-02 vsftpd 2.3.4 → `OBSERVADO` (veto explícito a la elevación, coincide con Ejemplo 2 del Anexo §15); H-03 UnrealIRCd → `INCONCLUSO` (veto por CT-02: versión no confirmada en evidencia, CVE no sostenible); H-04 distccd → `OBSERVADO` (artefacto único, sin segunda sonda). Bug real encontrado y corregido antes de la invocación: `registrar_veto.py` no actualizaba `estado` en `candidatos.json`. Persistencia verificada exacta. **T-025 (cierre de G3) queda pendiente de firma humana** — H-01 permanece en `VALIDADO_PROPUESTO`, no se auto-firma | `LDG-055`, `LDG-056` |
 
 ---
 
