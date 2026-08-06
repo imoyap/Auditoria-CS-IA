@@ -37,6 +37,7 @@
 | T-033 | **Cerrada** — skill `redactar`: determinismo verificado (diff vacío), advertencia legal comparada programáticamente contra el Anexo (coincide exacto) | `LDG-041` |
 | T-037, T-038 | **Cerradas** — workflow de 10 etapas documentado en README.md con justificación normativa; criterio de auditoría verificado anterior al primer HALLAZGO real | `LDG-042` |
 | **T-013** | **Cerrada — EJECUCIÓN REAL contra 192.168.56.117.** RECON ejecutó nmap real (30 puertos abiertos, incluye vsftpd 2.3.4 y Telnet — los mismos casos del Anexo §15, ahora con evidencia real). Encontró y forzó la corrección de 2 bugs arquitectónicos reales en el camino (Bash ausente para 4 roles; filtro de metacaracteres bloqueaba heredocs legítimos) | `LDG-044` a `LDG-049` |
+| **T-014** | **G1 CERRADO.** Bug real encontrado y corregido en el camino: Python en Windows corrompía manifest.sha256 con \r colgantes (newline="" agregado a 3 scripts) | `LDG-050`, `LDG-051` |
 
 ---
 

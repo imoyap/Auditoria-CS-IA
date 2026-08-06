@@ -35,7 +35,9 @@ def registrar(tipo: str, resumen: str, ref: str, actor: str = "VERIFICADOR") -> 
     ident = f"LDG-VETO-{int(datetime.now().timestamp() * 1000)}"
     linea = f"{ts} | {ident} | {tipo} | {actor} | {resumen} | {ref}\n"
 
-    with LEDGER_PATH.open("a", encoding="utf-8") as f:
+    # newline="" evita traducción "\n" -> "\r\n" en Windows (bug real
+    # encontrado en T-014 sobre evidencias/manifest.sha256, ver LEDGER.md).
+    with LEDGER_PATH.open("a", encoding="utf-8", newline="") as f:
         f.write(linea)
 
     return linea.rstrip("\n")

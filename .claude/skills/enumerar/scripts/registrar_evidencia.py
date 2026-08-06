@@ -48,7 +48,10 @@ def main() -> int:
     sha256 = hashlib.sha256(contenido_crudo).hexdigest()
     ruta_relativa = destino.relative_to(REPO_ROOT).as_posix()
 
-    with MANIFEST_PATH.open("a", encoding="utf-8") as f:
+    # newline="" evita que Python traduzca "\n" a "\r\n" en modo texto de
+    # Windows -- bug real encontrado verificando el manifiesto en T-014
+    # (sha256sum -c fallaba por un \r colgante en la línea nueva).
+    with MANIFEST_PATH.open("a", encoding="utf-8", newline="") as f:
         f.write(f"{sha256} *{ruta_relativa}\n")
 
     timestamp = datetime.now().astimezone().isoformat(timespec="seconds")
