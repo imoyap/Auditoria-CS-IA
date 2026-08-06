@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import unicodedata
 from pathlib import Path
 
 if hasattr(sys.stdin, "reconfigure"):
@@ -38,22 +39,35 @@ ADVERTENCIA_LEGAL = (
 PREFIJOS_SEVERIDAD = {"crit": "Crítica", "alt": "Alta", "med": "Media", "baj": "Baja"}
 
 
+def _sin_acentos(texto: str) -> str:
+    """Bug real encontrado en T-034 (LEDGER.md): "Crítica".lower().startswith("crit")
+    es False -- la í acentuada rompe la comparación con el prefijo ASCII "crit",
+    así que ninguna severidad "Crítica" real se contaba nunca. Se normaliza
+    quitando diacríticos antes de comparar (NFKD + descarte de marcas combinantes)."""
+    return "".join(c for c in unicodedata.normalize("NFKD", texto) if not unicodedata.combining(c))
+
+
 def _severidad_canonica(valor: str) -> str:
-    v = valor.strip().lower()
+    v = _sin_acentos(valor.strip().lower())
     for prefijo, canonica in PREFIJOS_SEVERIDAD.items():
         if v.startswith(prefijo):
             return canonica
-    return "Desconocida"
+    return "NO_OBSERVADO"
 
 
 def calcular_resumen(hallazgos: list[dict]) -> dict:
     """Agregación real -- CT-05 aplicado dentro del propio generador, no
-    solo como validador externo posterior."""
-    conteo = {"Crítica": 0, "Alta": 0, "Media": 0, "Baja": 0}
+    solo como validador externo posterior.
+
+    "Desconocida" (severidad NO_OBSERVADO/no confirmada, típicamente un
+    hallazgo INCONCLUSO) se cuenta explícitamente en vez de omitirse --
+    omitirla dejaría Total > suma de las 4 bandas conocidas, una
+    inconsistencia numérica que CT-05 existe justamente para atrapar
+    (bug real encontrado en T-034 antes de invocar REDACTOR, ver LEDGER.md)."""
+    conteo = {"Crítica": 0, "Alta": 0, "Media": 0, "Baja": 0, "NO_OBSERVADO": 0}
     for h in hallazgos:
         sev = _severidad_canonica(h["severidad"])
-        if sev in conteo:
-            conteo[sev] += 1
+        conteo[sev] += 1
     conteo["Total"] = len(hallazgos)
     return conteo
 
@@ -66,13 +80,25 @@ def generar_markdown(hallazgos: list[dict], cliente: str, activo: str) -> str:
         for h in hallazgos
     )
 
+    # Nota deliberadamente agnóstica de estado: NO_OBSERVADO agrupa tanto un
+    # hallazgo VALIDADO sin CVE/CVSS catalogado (p. ej. un backdoor a medida,
+    # sin vulnerabilidad numerada que consultar) como uno INCONCLUSO sin
+    # severidad asignable por falta de verificación (Anexo §15, Ejemplo 3) --
+    # son razones distintas, y la tabla de "Estado" por fila ya distingue
+    # cuál es cuál; el resumen no debe asumir que todos son INCONCLUSO.
+    nota_desconocida = (
+        f" + {resumen['NO_OBSERVADO']} sin severidad técnica asignable (sin CVE/CVSS "
+        f"catalogado, o verificación aún pendiente — ver columna Estado por hallazgo)"
+        if resumen["NO_OBSERVADO"] > 0 else ""
+    )
+
     return f"""# Reporte Final de Auditoría — {cliente}
 
 **Activo evaluado:** {activo}
 
 ## Resumen Ejecutivo
 
-Total de hallazgos: {resumen['Total']} (Crítica: {resumen['Crítica']}, Alta: {resumen['Alta']}, Media: {resumen['Media']}, Baja: {resumen['Baja']})
+Total de hallazgos: {resumen['Total']} (Crítica: {resumen['Crítica']}, Alta: {resumen['Alta']}, Media: {resumen['Media']}, Baja: {resumen['Baja']}{nota_desconocida})
 
 *Estas cifras se calculan por agregación directa sobre los hallazgos verificados, no se redactan a mano (control CT-05).*
 
