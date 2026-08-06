@@ -46,9 +46,9 @@ objetivo:
 ventana_de_trabajo:
   descripcion: "Ventana de trabajo acotada, según restricción del cliente"
   fuente: "docs/Instruccion.html, línea 2858"
-  fecha_inicio: "2026-08-07T10:00:00-04:00"
-  fecha_fin: "2026-08-07T12:00:00-04:00"
-  confirmado_por: "Mauricio Carrera, en el chat de esta sesión"
+  fecha_inicio: "2026-08-06T01:52:13-04:00"
+  fecha_fin: "2026-08-06T03:52:13-04:00"
+  confirmado_por: "Mauricio Carrera, en el chat de esta sesión (actualizada — ver LEDGER.md, entrada SUPERSEDE que reemplaza la ventana original 2026-08-07 10:00-12:00)"
   nota: >
     Ventana real confirmada por el grupo, no inventada. Toda ejecución del
     harness contra objetivo.ip_autorizada debe ocurrir dentro de este rango
