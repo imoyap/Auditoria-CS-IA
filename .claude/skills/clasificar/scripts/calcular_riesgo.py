@@ -17,6 +17,12 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from datetime import datetime
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[4]
+CANDIDATOS_PATH = REPO_ROOT / "normalizado" / "candidatos.json"  # JSONL: un objeto por línea
+LEDGER_PATH = REPO_ROOT / "LEDGER.md"
 
 FACTORES_IMPACTO = ["confidencialidad", "integridad", "disponibilidad", "datos_personales", "criticidad_operacional"]
 FACTORES_PROBABILIDAD = ["exploit_publico", "epss", "kev", "autenticacion", "exposicion"]
@@ -85,9 +91,39 @@ def calcular_riesgo(impacto: dict, probabilidad: dict) -> dict:
     return {"valor": valor, "banda": _riesgo_a_banda(valor)}
 
 
+def _check_id_ya_existe(check_id: str) -> bool:
+    if not CANDIDATOS_PATH.exists():
+        return False
+    for linea in CANDIDATOS_PATH.read_text(encoding="utf-8").splitlines():
+        if not linea.strip():
+            continue
+        if json.loads(linea).get("check_id") == check_id:
+            return True
+    return False
+
+
+def _anexar_candidato(registro: dict) -> None:
+    CANDIDATOS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with CANDIDATOS_PATH.open("a", encoding="utf-8", newline="") as f:
+        f.write(json.dumps(registro, ensure_ascii=False) + "\n")
+
+
+def _anexar_ledger_hallazgo(check_id: str, hallazgo: str, evidence_id: str) -> None:
+    ts = datetime.now().astimezone().isoformat(timespec="seconds")
+    ident = f"LDG-HALLAZGO-{int(datetime.now().timestamp() * 1000)}"
+    linea = f'{ts} | {ident} | HALLAZGO | ANALISTA | Propone {check_id} "{hallazgo}" desde {evidence_id} | ev:{evidence_id}\n'
+    with LEDGER_PATH.open("a", encoding="utf-8", newline="") as f:
+        f.write(linea)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Calcula impacto, probabilidad y riesgo inherente (Anexo §9-11)")
     parser.add_argument("--entrada", help="Ruta a un JSON con {impacto: {...}, probabilidad: {...}}. Si se omite, lee de stdin.")
+    parser.add_argument("--check-id", help="Si se provee junto con --hallazgo y --evidence-id, persiste el candidato en normalizado/candidatos.json y registra un HALLAZGO en LEDGER.md")
+    parser.add_argument("--hallazgo", help="Descripción corta del hallazgo candidato")
+    parser.add_argument("--evidence-id", help="ID del artefacto en evidencias/raw/ que sostiene este candidato")
+    parser.add_argument("--cwe", default="NO_OBSERVADO")
+    parser.add_argument("--cve", default="NO_OBSERVADO")
     args = parser.parse_args()
 
     texto = open(args.entrada, encoding="utf-8").read() if args.entrada else sys.stdin.read()
@@ -96,8 +132,32 @@ def main() -> int:
     impacto = calcular_impacto(datos["impacto"])
     probabilidad = calcular_probabilidad(datos["probabilidad"])
     riesgo = calcular_riesgo(impacto, probabilidad)
+    resultado = {"impacto": impacto, "probabilidad": probabilidad, "riesgo_inherente": riesgo}
 
-    print(json.dumps({"impacto": impacto, "probabilidad": probabilidad, "riesgo_inherente": riesgo}, ensure_ascii=False, indent=2))
+    persistir = args.check_id and args.hallazgo and args.evidence_id
+    if persistir:
+        if _check_id_ya_existe(args.check_id):
+            print(f"ERROR: {args.check_id!r} ya tiene un candidato registrado -- este script no sobrescribe candidatos existentes", file=sys.stderr)
+            return 2
+
+        # El candidato SIEMPRE nace en estado PROPUESTO -- esta ruta de
+        # código no acepta ni puede escribir VALIDADO/OBSERVADO/INCONCLUSO,
+        # esos estados solo los asigna VERIFICADOR (skill registrar_veto).
+        registro = {
+            "check_id": args.check_id,
+            "hallazgo": args.hallazgo,
+            "evidence_id": args.evidence_id,
+            "cwe": args.cwe,
+            "cve": args.cve,
+            "estado": "PROPUESTO",
+            **resultado,
+        }
+        _anexar_candidato(registro)
+        _anexar_ledger_hallazgo(args.check_id, args.hallazgo, args.evidence_id)
+        resultado["persistido"] = True
+        resultado["check_id"] = args.check_id
+
+    print(json.dumps(resultado, ensure_ascii=False, indent=2))
     return 0
 
 
