@@ -73,15 +73,42 @@ SCRIPTS_PROPIOS = {
 
 METACARACTERES_PROHIBIDOS = [";", "&&", "||", "`", "$(", ">", "<", "|", "\n"]
 
+# Un heredoc con delimitador ENTRE COMILLAS (<<'EOF' o <<"EOF") es literal:
+# el shell no expande variables ni sustituye comandos dentro de su cuerpo,
+# así que no puede usarse para inyectar comandos adicionales. Esto permite
+# pasarle a un script propio datos reales (p. ej. la salida de nmap) que
+# contengan ';', '|' u otros metacaracteres de forma legítima -- sin abrir
+# la puerta a encadenar comandos de verdad. Un heredoc SIN comillas en el
+# delimitador (<<EOF) sí permite expansión dentro del cuerpo, así que NO
+# se exime -- se sigue escaneando completo.
+# Encontrado ejecutando RECON de verdad contra el objetivo (T-013,
+# LEDGER.md LDG-047): el filtro original escaneaba el heredoc completo y
+# rechazaba el ';' legítimo dentro de un banner de nmap real.
+HEREDOC_COMILLADO = re.compile(r"<<\s*(['\"])(\w+)\1")
+
+def _separar_heredoc_literal(cmd: str) -> tuple[str, bool]:
+    """Retorna (porción a validar por metacaracteres, hubo_heredoc_comillado)."""
+    m = HEREDOC_COMILLADO.search(cmd)
+    if not m:
+        return cmd, False
+    # Todo lo anterior al operador << es sintaxis de shell real y se valida
+    # igual que siempre; el cuerpo del heredoc (comillado) se exime.
+    return cmd[: m.start()], True
+
 def es_invocacion_de_script_propio(cmd: str) -> tuple[bool, str]:
     cmd_norm = cmd.replace("\\", "/")
+    porcion_a_validar, hubo_heredoc = _separar_heredoc_literal(cmd_norm)
+
     for m in METACARACTERES_PROHIBIDOS:
-        if m in cmd_norm:
-            return False, f"comando contiene metacaracter no permitido ({m!r}) -- solo se acepta una invocación simple"
-    if not re.match(r'^\s*"?(python3?|py)"?\s', cmd_norm):
+        if m == "<" and hubo_heredoc:
+            continue  # el "<<" del propio heredoc comillado es lo esperado
+        if m in porcion_a_validar:
+            return False, f"comando contiene metacaracter no permitido ({m!r}) fuera de un heredoc comillado -- solo se acepta una invocación simple (+ heredoc comillado opcional)"
+
+    if not re.match(r'^\s*"?(python3?|py)"?\s', porcion_a_validar):
         return False, "no comienza con un intérprete de Python conocido (python/python3/py)"
     for patron_script in SCRIPTS_PROPIOS.get(rol, []):
-        if re.search(patron_script, cmd_norm):
+        if re.search(patron_script, porcion_a_validar):
             return True, ""
     return False, f"no invoca ninguno de los scripts propios de {rol}: {SCRIPTS_PROPIOS.get(rol, [])}"
 
