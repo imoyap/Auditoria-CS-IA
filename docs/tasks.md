@@ -15,6 +15,7 @@
 | T-004 | **Cerrada** — `scope/declaracion_etica.md` firmado por Mauricio Carrera (único integrante confirmado) | `LDG-011` |
 | T-005 | **Cerrada** — ya satisfecha por T-002 (RC-1..RC-6 en `scope/alcance.yaml` con fuente citada); verificación formal aparte | `LDG-012` |
 | T-006 | **Cerrada** — 5 archivos `roles/*.md`, cada uno con las 3 secciones exigidas | `LDG-013` |
+| T-007 | **Cerrada** — 5 subagentes `.claude/agents/*.md` con `tools`/`disallowedTools` verificados estática y dinámicamente (`claude -p --agent verificador` confirmó el rechazo real de Bash) | `LDG-014`, `LDG-015` |
 
 ---
 
