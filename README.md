@@ -41,6 +41,26 @@ Justificación de las etapas contra las referencias del Anexo §1:
 
 **Coincidencia workflow declarado ↔ ejecutado:** verificable en cualquier momento recorriendo `LEDGER.md` cronológicamente — cada entrada cita la tarea (`T-XXX`) y el `REQ-XXX` que avanza, en el mismo orden de bloques que `docs/tasks.md` declara.
 
+**Verificación real al cierre (T-039, `LEDGER.md` `LDG-066`):** con el workflow completo (los 3 gates de firma humana obligatoria — G0, G3, G5 — cerrados), se recorrió `LEDGER.md` cronológicamente y se comparó contra la tabla de 10 etapas de arriba:
+
+| Timestamp real | Hito | Etapa declarada |
+|---|---|---|
+| 00:58:02 | G0 firmado | 0–1 |
+| 08:28:55 | RECON captura evidencia real (T-013) | 3 |
+| 08:34:06 | G1 cerrado | 3 (gate) |
+| 08:36:09 | G2 cerrado (normalización determinista) | 4 |
+| 08:44:50 | ANALISTA propone candidatos (T-021) | 5 |
+| 08:59:17 | VERIFICADOR confirma/veta (T-024/025) | 5 |
+| 09:04:41 | Gap real de vector CVSS corregido (T-024b) | 6 |
+| 09:08:25 | G3 firmado | 5–6 (gate) |
+| 09:22:53 | COMPLIANCE correlaciona (T-027) | 7 |
+| 09:24:08 | G4 cerrado | 7 (gate) |
+| 09:38:26 | REDACTOR genera el informe (T-034) | 8 |
+| 09:39:55 | CT-01/CT-07 verificados sobre el informe final (T-035) | 8 |
+| 09:42:44 | G5 firmado | 8 (gate) |
+
+Orden monótono sin excepción: ninguna etapa se ejecutó antes de que la etapa o gate anterior cerrara; ningún hallazgo real (`H-01`..`H-04`) aparece antes de G1 (captura de evidencia); ningún gate se firmó antes del trabajo real de su etapa. El único salto de tiempo real (G0 a las 00:58 frente a T-013 a las 08:28, ~7,5 h) no es una desviación de etapa: corresponde a dos cambios de ventana de trabajo ya registrados como entradas `SUPERSEDE` explícitas (`LDG-043`, `LDG-046`), nunca una edición silenciosa del alcance.
+
 > **Nota de nomenclatura:** las entradas tipo `HALLAZGO` que aparecen en `LEDGER.md` durante la Fase 4 (`LDG-007`, `LDG-014`, `LDG-017`, etc.) son hallazgos de **construcción del propio pipeline** (bugs encontrados y corregidos al probar cada script), no hallazgos de auditoría sobre `192.168.56.117` — esos, siguiendo el workflow declarado arriba, solo pueden empezar a existir desde la etapa 3 en adelante, con G0 ya firmado y dentro de la ventana de trabajo real (`scope/alcance.yaml`).
 
 ---
