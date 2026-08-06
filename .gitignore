@@ -26,3 +26,7 @@ docs/image.png
 # Artefactos binarios / runtime del framework auditoria/ existente
 data/auditoria.db
 .claude/scheduled_tasks.lock
+
+# Estado de ejecución del harness U3 (regenerable) — el registro persistente
+# real vive en LEDGER.md, no aquí
+harness/estado.json

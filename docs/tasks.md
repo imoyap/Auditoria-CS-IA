@@ -17,6 +17,7 @@
 | T-006 | **Cerrada** — 5 archivos `roles/*.md`, cada uno con las 3 secciones exigidas | `LDG-013` |
 | T-007 | **Cerrada** — 5 subagentes `.claude/agents/*.md` con `tools`/`disallowedTools` verificados estática y dinámicamente (`claude -p --agent verificador` confirmó el rechazo real de Bash) | `LDG-014`, `LDG-015` |
 | T-008 | **Cerrada** — `harness/controles/reject_and_log.sh` probado con 4 payloads reales (3 rechazos + 1 permiso), cada rechazo generó una entrada real en `LEDGER.md` | `LDG-016` |
+| T-009 | **Cerrada** — `harness/orquestador.py` probado en 3 escenarios reales: tope de reintentos real (etapa 0 falla porque `ventana_de_trabajo` sigue sin definir), `--continue` se niega a avanzar, `--sign-gate` probado con gate desechable | `LDG-017`, `LDG-018` |
 
 ---
 
