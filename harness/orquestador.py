@@ -130,11 +130,15 @@ def ejecutar_etapa(etapa: dict) -> tuple[bool, str]:
     return False, f"Etapa {etapa['id']} ({etapa['nombre']}) aún no implementada (ver docs/tasks.md)"
 
 
-def detener(estado: dict, motivo: str) -> None:
+def detener(estado: dict, motivo: str, tipo: str = "RECHAZO") -> None:
+    """tipo='RECHAZO' para fallos reales (tope de reintentos, etc.);
+    tipo='DECISION' para una parada esperada del propio diseño (p. ej.
+    etapa completada, esperando firma humana de gate) -- no es un rechazo,
+    es el pipeline funcionando como se diseñó."""
     estado["detenido"] = True
     estado["motivo_detencion"] = motivo
     guardar_estado(estado)
-    anexar_ledger("RECHAZO", "ORQUESTADOR", motivo, f"etapa:{estado['etapa_actual']}")
+    anexar_ledger(tipo, "ORQUESTADOR", motivo, f"etapa:{estado['etapa_actual']}")
     print(f"\nDETENIDO: {motivo}", file=sys.stderr)
     sys.exit(1)
 
@@ -161,6 +165,7 @@ def cmd_run(_args: argparse.Namespace) -> None:
                 estado,
                 f"Etapa {etapa['id']} lista pero {etapa['gate']} no tiene firma humana real "
                 f"(gates/{etapa['gate']}.md). Usa --sign-gate {etapa['gate']} --by NOMBRE --date FECHA.",
+                tipo="DECISION",
             )
 
         estado["iteraciones_totales"] += 1
@@ -180,6 +185,7 @@ def cmd_run(_args: argparse.Namespace) -> None:
                     estado,
                     f"Etapa {etapa['id']} lista, esperando firma humana de {etapa['gate']} "
                     f"antes de avanzar (parada real, no informativa)",
+                    tipo="DECISION",
                 )
             estado["etapa_actual"] += 1
             estado["intentos_etapa_actual"] = 0

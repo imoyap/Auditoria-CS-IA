@@ -46,12 +46,13 @@ objetivo:
 ventana_de_trabajo:
   descripcion: "Ventana de trabajo acotada, según restricción del cliente"
   fuente: "docs/Instruccion.html, línea 2858"
-  fecha_inicio: "A DEFINIR POR EL GRUPO — fecha/hora real de la sesión de laboratorio autorizada"
-  fecha_fin: "A DEFINIR POR EL GRUPO"
+  fecha_inicio: "2026-08-07T10:00:00-04:00"
+  fecha_fin: "2026-08-07T12:00:00-04:00"
+  confirmado_por: "Mauricio Carrera, en el chat de esta sesión"
   nota: >
-    No se rellena con una fecha inventada. gates/G0.md no puede cerrarse con este
-    campo en estado "A DEFINIR" — es responsabilidad del grupo completarlo con la
-    ventana real antes de la firma humana de G0.
+    Ventana real confirmada por el grupo, no inventada. Toda ejecución del
+    harness contra objetivo.ip_autorizada debe ocurrir dentro de este rango
+    (RC-2); fuera de él, el harness rechaza iniciar el BoundedLoop.
 
 criterio_de_auditoria:
   marcos:
