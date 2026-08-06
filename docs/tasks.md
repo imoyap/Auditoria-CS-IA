@@ -32,6 +32,7 @@
 | T-031 | **Cerrada** — CT-04 probado reproduciendo el error real de CertEngine (misma versión) → rechazo; versión distinta → permite | `LDG-034` |
 | T-032 | **Cerrada** — CT-05 lógica verificada (consistente/discrepante); hallazgo de entorno documentado (encoding de acentos en pipes de git-bash) | `LDG-035`, `LDG-036` |
 | T-035 | **Cerrada** — CT-01 y CT-07, ambos con 3 casos reales cada uno; CT-01 probado con la evidencia real de G0 (no ficticia) | `LDG-037`, `LDG-038` |
+| T-026 | **Cerrada** — skill `correlacionar` probada con el Ejemplo 1 del Anexo (Telnet); reintento sobre mismo ID rechazado (protege severidad) | `LDG-039` |
 
 ---
 
