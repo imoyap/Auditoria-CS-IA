@@ -22,12 +22,17 @@ from pathlib import Path
 from mcp.server.fastmcp import FastMCP
 
 CORPUS_PATH = Path(__file__).resolve().parent / "corpus_cwe.json"
+CORPUS_CVSS_PATH = Path(__file__).resolve().parent / "corpus_cvss.json"
 
 mcp = FastMCP("conocimiento-tecnico")
 
 
 def _cargar_corpus() -> dict:
     return json.loads(CORPUS_PATH.read_text(encoding="utf-8"))
+
+
+def _cargar_corpus_cvss() -> dict:
+    return json.loads(CORPUS_CVSS_PATH.read_text(encoding="utf-8"))
 
 
 @mcp.tool()
@@ -44,6 +49,20 @@ def buscar_cwe(consulta: str) -> dict:
         if consulta.strip().lower() in entrada["nombre"].lower() or consulta.strip().lower() in entrada["nombre_es"].lower():
             return {"resultado": entrada, "fuente": corpus["fuente"]}
     return {"resultado": "NO_OBSERVADO", "razon": f"Sin coincidencia para {consulta!r} en el corpus offline"}
+
+
+@mcp.tool()
+def buscar_cvss(cve: str) -> dict:
+    """Busca el vector CVSS completo y base score para un CVE exacto (p. ej.
+    "CVE-2011-2523") en el corpus offline curado desde NVD (T-024b, LDG-057).
+    Retorna NO_OBSERVADO si el CVE no está en el corpus -- nunca aproxima ni
+    inventa un vector para un CVE no citado explícitamente."""
+    corpus = _cargar_corpus_cvss()
+    cve_norm = cve.strip().upper()
+    for entrada in corpus["entradas"]:
+        if entrada["cve"].upper() == cve_norm:
+            return {"resultado": entrada, "fuente": corpus["fuente"]}
+    return {"resultado": "NO_OBSERVADO", "razon": f"Sin coincidencia para {cve!r} en el corpus offline de CVSS"}
 
 
 @mcp.tool()
