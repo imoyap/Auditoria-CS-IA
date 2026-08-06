@@ -16,6 +16,7 @@ verificado en LEDGER.md al cerrar T-033.
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import sys
 import unicodedata
@@ -114,11 +115,36 @@ Total de hallazgos: {resumen['Total']} (Crítica: {resumen['Crítica']}, Alta: {
 """
 
 
+def finalizar_matriz(matriz_entrada: Path, matriz_salida: Path, plazos_referencia: dict[str, str]) -> int:
+    """Copia normalizado/matriz_borrador.csv (ya cerrada en G4, COMPLIANCE)
+    a reporte/matriz_correlacion.csv agregando la columna Plazo_referencia
+    calculada por la skill `priorizar` (banda de riesgo residual, Anexo §11)
+    -- nunca recalcula ni modifica ninguna columna ya escrita por COMPLIANCE.
+    Un check_id sin entrada en plazos_referencia (p. ej. INCONCLUSO, sin
+    riesgo residual asignable) queda NO_OBSERVADO, nunca en blanco."""
+    with matriz_entrada.open(encoding="utf-8", newline="") as f:
+        filas = list(csv.DictReader(f))
+
+    columnas = list(filas[0].keys()) + ["Plazo_referencia"] if filas else ["Plazo_referencia"]
+    for fila in filas:
+        fila["Plazo_referencia"] = plazos_referencia.get(fila["ID"], "NO_OBSERVADO")
+
+    matriz_salida.parent.mkdir(parents=True, exist_ok=True)
+    with matriz_salida.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=columnas)
+        writer.writeheader()
+        writer.writerows(filas)
+
+    return len(filas)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Genera el reporte final por sustitución de plantilla")
     parser.add_argument("--cliente", required=True)
     parser.add_argument("--activo", required=True)
     parser.add_argument("--output", required=True, help="Ruta de salida del .md")
+    parser.add_argument("--matriz-entrada", help="normalizado/matriz_borrador.csv (ya cerrada en G4)")
+    parser.add_argument("--matriz-salida", help="reporte/matriz_correlacion.csv (con Plazo_referencia agregado)")
     args = parser.parse_args()
 
     datos = json.loads(sys.stdin.read())
@@ -127,8 +153,15 @@ def main() -> int:
     salida = Path(args.output)
     salida.parent.mkdir(parents=True, exist_ok=True)
     salida.write_text(contenido, encoding="utf-8")
-
     print(f"Reporte generado: {salida}")
+
+    if args.matriz_entrada and args.matriz_salida:
+        n = finalizar_matriz(
+            Path(args.matriz_entrada), Path(args.matriz_salida),
+            datos.get("plazos_referencia", {}),
+        )
+        print(f"Matriz de correlación finalizada: {args.matriz_salida} ({n} filas)")
+
     return 0
 
 
