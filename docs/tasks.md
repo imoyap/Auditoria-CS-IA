@@ -26,6 +26,7 @@
 | T-018 | **Cerrada** — `mcp/conocimiento_normativo` (corpus tomado del Anexo §14-15) verificado con protocolo MCP real, incluido el caso NO_OBSERVADO | `LDG-027` |
 | T-019 | **Cerrada** — skill `clasificar` (motor D6): 12/12 verificaciones exactas contra los 2 ejemplos numéricos del Anexo §15; falla explícita ante factor faltante | `LDG-028` |
 | T-020 | **Cerrada** — CT-02 probado reproduciendo el ejemplo literal del Anexo §6 (wordpress no encontrado → rechazo) | `LDG-029` |
+| T-022 | **Cerrada** — skill `registrar_veto` probada: RECHAZO válido se anexa, `--tipo HALLAZGO` rechazado por argparse | `LDG-030`, `LDG-031` |
 
 ---
 
