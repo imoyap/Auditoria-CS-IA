@@ -11,6 +11,10 @@
 |---|---|---|
 | T-001 | **Cerrada** — 12 carpetas creadas, cada una con ≥1 archivo real; verificado con `find` | `LDG-005` |
 | T-002 | **Cerrada** — `scope/alcance.yaml` parsea como YAML válido, sin literales de IP duplicados en el resto del repo | `LDG-006` |
+| T-003 | **Cerrada** — 8 patrones regex válidos en `scope/allowlist.txt`, sin IP literal; repositorio git inicializado y versionado (commit `298020b`) | `LDG-007..LDG-010` |
+| T-004 | **Cerrada** — `scope/declaracion_etica.md` firmado por Mauricio Carrera (único integrante confirmado) | `LDG-011` |
+| T-005 | **Cerrada** — ya satisfecha por T-002 (RC-1..RC-6 en `scope/alcance.yaml` con fuente citada); verificación formal aparte | `LDG-012` |
+| T-006 | **Cerrada** — 5 archivos `roles/*.md`, cada uno con las 3 secciones exigidas | `LDG-013` |
 
 ---
 
