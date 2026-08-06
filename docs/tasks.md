@@ -39,6 +39,7 @@
 | **T-013** | **Cerrada — EJECUCIÓN REAL contra 192.168.56.117.** RECON ejecutó nmap real (30 puertos abiertos, incluye vsftpd 2.3.4 y Telnet — los mismos casos del Anexo §15, ahora con evidencia real). Encontró y forzó la corrección de 2 bugs arquitectónicos reales en el camino (Bash ausente para 4 roles; filtro de metacaracteres bloqueaba heredocs legítimos) | `LDG-044` a `LDG-049` |
 | **T-014** | **G1 CERRADO.** Bug real encontrado y corregido en el camino: Python en Windows corrompía manifest.sha256 con \r colgantes (newline="" agregado a 3 scripts) | `LDG-050`, `LDG-051` |
 | **T-015** | **G2 CERRADO.** `normalizado/inventario.json` real: 30 servicios, 0 sin línea de origen, verificado cruzado contra el crudo (vsftpd línea 6, telnet línea 10) | `LDG-052` |
+| **T-021** | **4 candidatos reales propuestos por ANALISTA** (H-01 bindshell, H-02 vsftpd/CVE-2011-2523, H-03 UnrealIRCd/CVE-2010-2075, H-04 distccd/CVE-2004-2687), CWE vía MCP real, todos en estado PROPUESTO | `LDG-053`, `LDG-054` |
 
 ---
 
