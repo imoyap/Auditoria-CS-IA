@@ -27,6 +27,7 @@ ESTADO_PATH = REPO_ROOT / "harness" / "estado.json"
 LEDGER_PATH = REPO_ROOT / "LEDGER.md"
 GATES_DIR = REPO_ROOT / "gates"
 SCOPE_DIR = REPO_ROOT / "scope"
+CANDIDATOS_PATH = REPO_ROOT / "normalizado" / "candidatos.json"
 
 TOPE_REINTENTOS_POR_ETAPA = 3
 MAX_ITERACIONES_GLOBAL = 30  # 10 etapas x 3 reintentos (docs/design.md)
@@ -217,6 +218,41 @@ def cmd_run(_args: argparse.Namespace) -> None:
     print("Workflow completo: las 10 etapas cerradas.")
 
 
+def _promover_validado_propuesto(gate_id: str, firmante: str, fecha: str) -> list[str]:
+    """Solo para G3: al firmar, cada candidato en VALIDADO_PROPUESTO pasa al
+    literal VALIDADO -- esta es la ÚNICA ruta de código en todo el pipeline
+    que puede escribir ese literal (Anexo §2: "el sistema puede proponer
+    VALIDADO; solo un humano ... puede confirmarlo"), y solo se ejecuta como
+    consecuencia directa de --sign-gate G3 con --by/--date ya validados por
+    argparse. VERIFICADOR (registrar_veto.py) nunca tiene este camino."""
+    if gate_id != "G3" or not CANDIDATOS_PATH.exists():
+        return []
+
+    lineas = CANDIDATOS_PATH.read_text(encoding="utf-8").splitlines()
+    promovidos = []
+    nuevas_lineas = []
+    for linea in lineas:
+        if not linea.strip():
+            continue
+        registro = json.loads(linea)
+        if registro.get("estado") == "VALIDADO_PROPUESTO":
+            registro["estado"] = "VALIDADO"
+            promovidos.append(registro["check_id"])
+        nuevas_lineas.append(json.dumps(registro, ensure_ascii=False))
+
+    if promovidos:
+        with CANDIDATOS_PATH.open("w", encoding="utf-8", newline="") as f:
+            f.write("\n".join(nuevas_lineas) + "\n")
+        for check_id in promovidos:
+            anexar_ledger(
+                "GATE", "HUMANO",
+                f"{check_id} promovido de VALIDADO_PROPUESTO a VALIDADO por firma de {gate_id} ({firmante}, {fecha})",
+                f"gate:{gate_id}",
+            )
+
+    return promovidos
+
+
 def cmd_sign_gate(args: argparse.Namespace) -> None:
     gate_path = GATES_DIR / f"{args.gate}.md"
     if not gate_path.exists():
@@ -240,6 +276,9 @@ def cmd_sign_gate(args: argparse.Namespace) -> None:
     guardar_estado(estado)
 
     anexar_ledger("GATE", "HUMANO", f"{args.gate} firmado por {args.by} ({args.date})", f"gate:{args.gate}")
+    promovidos = _promover_validado_propuesto(args.gate, args.by, args.date)
+    if promovidos:
+        print(f"Promovidos a VALIDADO literal: {', '.join(promovidos)}")
     print(f"{args.gate} firmado. Ejecuta 'orquestador.py run' (o --continue) para avanzar.")
 
 
