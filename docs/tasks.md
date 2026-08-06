@@ -29,6 +29,7 @@
 | T-022 | **Cerrada** — skill `registrar_veto` probada: RECHAZO válido se anexa, `--tipo HALLAZGO` rechazado por argparse | `LDG-030`, `LDG-031` |
 | T-023 | **Cerrada** — CT-06 probado en 3 casos (fallo de red+VALIDADO→rechazo, fallo de red+INCONCLUSO→permite, sin fallo+VALIDADO→permite) | `LDG-032` |
 | T-028 | **Cerrada** — CT-03 probado: consistente→OK, divergente→rechazo citando check_id y valores | `LDG-033` |
+| T-031 | **Cerrada** — CT-04 probado reproduciendo el error real de CertEngine (misma versión) → rechazo; versión distinta → permite | `LDG-034` |
 
 ---
 
