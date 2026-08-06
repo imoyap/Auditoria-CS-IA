@@ -35,6 +35,7 @@
 | T-026 | **Cerrada** — skill `correlacionar` probada con el Ejemplo 1 del Anexo (Telnet); reintento sobre mismo ID rechazado (protege severidad) | `LDG-039` |
 | T-030 | **Cerrada** — skill `priorizar` probada con los riesgos residuales exactos de los 2 ejemplos del Anexo (orden y plazo correctos) | `LDG-040` |
 | T-033 | **Cerrada** — skill `redactar`: determinismo verificado (diff vacío), advertencia legal comparada programáticamente contra el Anexo (coincide exacto) | `LDG-041` |
+| T-037, T-038 | **Cerradas** — workflow de 10 etapas documentado en README.md con justificación normativa; criterio de auditoría verificado anterior al primer HALLAZGO real | `LDG-042` |
 
 ---
 
