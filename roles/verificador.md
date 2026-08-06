@@ -10,7 +10,7 @@ Lee todo el repositorio (evidencia cruda, candidatos, matriz, reporte) para conf
 - `Skill` — únicamente `registrar_veto`, el único canal de escritura de este rol.
 
 ## Herramientas que NO tiene
-- **Escritura, sin excepción.** No tiene `Bash`, `Write` ni `Edit` en su `tools`. La separación no es una promesa del system prompt: el runtime de Claude Code rechaza cualquier intento — ver el hook de `docs/design.md` §a.3. Un intento real queda registrado en `LEDGER.md` como `RECHAZO` (evidencia para REQ-B-03 y REQ-H-01).
+- **Escritura arbitraria.** No tiene `Write` ni `Edit` en absoluto. `Bash` está restringido por el hook a una única invocación permitida, `.claude/skills/registrar_veto/scripts/registrar_veto.py` — cualquier otro comando (`ls`, `cat`, intentar tocar un archivo por otra vía, etc.) se rechaza. La separación no es una promesa del system prompt: el runtime de Claude Code rechaza cualquier intento — ver el hook de `docs/design.md` §a.3. Un intento real queda registrado en `LEDGER.md` como `RECHAZO` (evidencia para REQ-B-03 y REQ-H-01; ver también la corrección real de T-013 en `LDG-044`/`LDG-045` — el diseño original no le daba `Bash` en absoluto, lo que le impedía ejecutar su propio script de veto).
 - No puede escribir `VALIDADO` directamente en ningún archivo: la skill `registrar_veto` solo admite entradas `RECHAZO`/`DECISION`, nunca ese estado.
 
 ## Poder

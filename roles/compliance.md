@@ -12,7 +12,7 @@ Sobre cada hallazgo cerrado en G3 (VALIDADO/OBSERVADO/INCONCLUSO), consulta `mcp
 
 ## Herramientas que NO tiene
 - Modificación de severidades: la skill `correlacionar` no acepta un parámetro que altere el campo de severidad de un hallazgo ya cerrado en G3 — solo puede escribir columnas de correlación.
-- `Bash`/`Write`/`Edit` directos: toda escritura pasa por `correlacionar`, que anexa filas a `normalizado/matriz_borrador.csv`.
+- `Write`/`Edit` directos, y `Bash` sin restricción: solo puede invocar `.claude/skills/correlacionar/scripts/correlacionar.py`, que anexa filas a `normalizado/matriz_borrador.csv` y no tiene ruta de código para modificar una fila ya escrita.
 
 ## Poder
 Voz.

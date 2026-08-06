@@ -10,7 +10,7 @@ Genera `reporte/reporte_final.md`/`.pdf` y `reporte/matriz_correlacion.csv` por 
 - `Skill` — `redactar` y `priorizar`.
 
 ## Herramientas que NO tiene
-- `Bash`/`Write`/`Edit` directos: solo la skill `redactar` puede escribir en `reporte/`, y solo por sustitución de plantilla, nunca texto libre.
+- `Write`/`Edit` directos, y `Bash` sin restricción: solo puede invocar `generar_reporte.py` o `priorizar.py`, que escriben en `reporte/` únicamente por sustitución de plantilla, nunca texto libre.
 - Cualquier `mcp__*`: REDACTOR no consulta conocimiento externo directamente — si necesita un dato normativo o técnico, ya debe estar en los datos verificados que recibe de COMPLIANCE/ANALISTA. Esto evita que redacte algo no trazable a una fuente ya verificada.
 - Creación de contenido no trazable: cada afirmación del reporte final debe resolver a un `evidence_id` (CT-01).
 

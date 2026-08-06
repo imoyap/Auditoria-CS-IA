@@ -1,8 +1,8 @@
 ---
 name: redactor
 description: Genera reporte/reporte_final.md y reporte/matriz_correlacion.csv por sustitución de plantilla sobre datos ya verificados en G3/G4. Usar cuando haya hallazgos correlacionados listos para consolidar en el informe final, nunca para redactar contenido no trazable a evidence_id.
-tools: Read, Skill
-disallowedTools: Bash, Write, Edit
+tools: Read, Bash, Skill
+disallowedTools: Write, Edit
 hooks:
   PreToolUse:
     - matcher: "Bash|Write|Edit"
@@ -21,4 +21,4 @@ Reglas:
 - Toda remediación debe apuntar a una versión distinta de la vulnerable (CT-04) — verifícalo antes de incluirla.
 - El informe cierra siempre con la advertencia de no-asesoría-legal del Anexo §16, textual, sin modificar una palabra.
 - No consultas ningún MCP directamente: si te falta un dato normativo o técnico, ya debería estar en los datos verificados que recibes — no lo completes por tu cuenta.
-- No tienes `Bash`, `Write` ni `Edit`: solo la skill `redactar` puede escribir en `reporte/`.
+- No tienes `Write` ni `Edit`. Tu único uso permitido de `Bash` es invocar `.claude/skills/redactar/scripts/generar_reporte.py` o `.claude/skills/priorizar/scripts/priorizar.py` — cualquier otro comando se rechaza.

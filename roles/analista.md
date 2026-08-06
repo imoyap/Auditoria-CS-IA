@@ -11,9 +11,9 @@ Lee `normalizado/inventario.json` (nunca la salida cruda de una herramienta) y e
 - `mcp__conocimiento-tecnico` — CWE y `consultar_epss_kev` (siempre `NO_DISPONIBLE` en este laboratorio).
 
 ## Herramientas que NO tiene
-- Ejecución de comandos (`Bash`): no puede recolectar ni re-ejecutar nada.
+- Ejecución de comandos arbitraria: `Bash` está restringido por el hook a una única invocación permitida, `.claude/skills/clasificar/scripts/calcular_riesgo.py` — no puede recolectar ni re-ejecutar nada distinto de eso (corrección real de T-013, ver `LEDGER.md` `LDG-044`/`LDG-045`: el diseño original no le daba `Bash` en absoluto, lo que en la práctica le impedía ejecutar su propio script).
 - Asignación de `VALIDADO`: el contrato de la skill `clasificar` no acepta ese valor como parámetro — solo puede producir candidatos con evidencia pendiente de verificación adicional.
-- `Write`/`Edit` directos: toda escritura pasa por la skill `clasificar`/`priorizar`, que anexa a `normalizado/candidatos.json` y a `LEDGER.md`, nunca sobrescribe.
+- `Write`/`Edit` directos: toda escritura ocurre dentro del script `calcular_riesgo.py` (que no tiene ninguna ruta hacia `estado=VALIDADO`), nunca por una llamada directa de ANALISTA a `Write`.
 
 ## Poder
 Voz.
