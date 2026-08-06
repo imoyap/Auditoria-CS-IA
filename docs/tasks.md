@@ -20,6 +20,7 @@
 | T-009 | **Cerrada** — `harness/orquestador.py` probado en 3 escenarios reales: tope de reintentos real (etapa 0 falla porque `ventana_de_trabajo` sigue sin definir), `--continue` se niega a avanzar, `--sign-gate` probado con gate desechable | `LDG-017`, `LDG-018` |
 | (ventana real) | `scope/alcance.yaml.ventana_de_trabajo` actualizada con fecha real confirmada por el usuario (2026-08-07 10:00–12:00); etapa 0 del harness ahora pasa de verdad y se detiene esperando G0 | `LDG-020` |
 | T-010 | **Cerrada** — `gates/G0.md` con los 7 campos del formato exacto, evidencia real, prueba negativa contra `192.168.56.101` incluida, Firma humana en `[PENDIENTE]` | `LDG-021` |
+| **T-011** | **Cerrada — G0 FIRMADO** por Mauricio Carrera (2026-08-06), confirmado explícitamente antes de ejecutar `--sign-gate`. **Bloque 0 completo (T-001..T-011).** | `LDG-022` |
 
 ---
 
