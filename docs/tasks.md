@@ -23,6 +23,7 @@
 | **T-011** | **Cerrada — G0 FIRMADO** por Mauricio Carrera (2026-08-06), confirmado explícitamente antes de ejecutar `--sign-gate`. **Bloque 0 completo (T-001..T-011).** | `LDG-022` |
 | T-012 | **Cerrada** — skill `enumerar` probada con artefacto de prueba (eliminado después); hash/manifiesto verificados, no-sobrescritura verificada. Sin tocar el objetivo — la ejecución real espera la ventana de mañana | `LDG-023`, `LDG-024` |
 | T-017 | **Cerrada** — `mcp/conocimiento_tecnico` verificado con protocolo MCP real vía `claude -p --mcp-config`, no solo en Python | `LDG-025`, `LDG-026` |
+| T-018 | **Cerrada** — `mcp/conocimiento_normativo` (corpus tomado del Anexo §14-15) verificado con protocolo MCP real, incluido el caso NO_OBSERVADO | `LDG-027` |
 
 ---
 

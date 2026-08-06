@@ -1,0 +1,34 @@
+{
+  "fuente": "docs/anexo_tecnico_u3.md §14 (Marcos a integrar) y §15 (Ejemplos trabajados) — corpus limitado a lo explícitamente verificado en el Anexo, no ampliado con conocimiento general no verificado para este ejercicio",
+  "iso27001_2022_anexoA": [
+    {"id": "A.8.20", "nombre": "Seguridad de redes"},
+    {"id": "A.8.24", "nombre": "Uso de criptografía"},
+    {"id": "A.8.21", "nombre": "Seguridad de servicios de red"},
+    {"id": "A.8.8", "nombre": "Gestión de vulnerabilidades técnicas"},
+    {"id": "A.8.19", "nombre": "Instalación de software en sistemas operativos"},
+    {"id": "A.8.15", "nombre": "Registro de eventos"},
+    {"id": "A.8.16", "nombre": "Actividades de monitoreo"}
+  ],
+  "nist_csf_2": [
+    {"id": "PR.DS-02", "nombre": "Datos en tránsito protegidos"},
+    {"id": "PR.PS-01", "nombre": "Gestión de configuración"},
+    {"id": "ID.RA-01", "nombre": "Vulnerabilidades identificadas"},
+    {"id": "PR.PS-02", "nombre": "Mantenimiento de software"},
+    {"id": "DE.CM-01", "nombre": "Monitoreo continuo de la red"},
+    {"id": "DE.AE-03", "nombre": "Correlación de eventos de múltiples fuentes"}
+  ],
+  "cis_v8": [
+    {"id": "4.1", "nombre": "Proceso de configuración segura"},
+    {"id": "4.8", "nombre": "Desinstalar servicios innecesarios"},
+    {"id": "3.10", "nombre": "Cifrar datos sensibles en tránsito"},
+    {"id": "7.3", "nombre": "Gestión automatizada de parches de sistema operativo"},
+    {"id": "2.2", "nombre": "Software soportado"},
+    {"id": "8.2", "nombre": "Recolección de logs de auditoría"},
+    {"id": "8.5", "nombre": "Logs detallados de auditoría"}
+  ],
+  "normativa_cl": [
+    {"id": "Ley21663", "nombre": "Ley 21.663 (Marco de Ciberseguridad, ANCI)", "obligacion": "Deberes de gestión de riesgos y reporte de incidentes de efecto significativo"},
+    {"id": "Ley21719", "nombre": "Ley 21.719 (Protección de Datos Personales)", "obligacion": "Medidas de seguridad, notificación de brechas, roles de tratamiento de datos"},
+    {"id": "Ley21459", "nombre": "Ley 21.459 (Delitos Informáticos)", "obligacion": "Hace del alcance autorizado un asunto legal, no solo de etiqueta profesional"}
+  ]
+}

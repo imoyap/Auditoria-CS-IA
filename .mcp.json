@@ -3,6 +3,10 @@
     "conocimiento-tecnico": {
       "command": "C:\\Python314\\python.exe",
       "args": ["mcp/conocimiento_tecnico/server.py"]
+    },
+    "conocimiento-normativo": {
+      "command": "C:\\Python314\\python.exe",
+      "args": ["mcp/conocimiento_normativo/server.py"]
     }
   }
 }
