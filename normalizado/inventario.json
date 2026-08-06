@@ -1,0 +1,274 @@
+{
+  "servicios": [
+    {
+      "puerto": 21,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "ftp",
+      "version": "vsftpd 2.3.4",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 6
+    },
+    {
+      "puerto": 22,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "ssh",
+      "version": "OpenSSH 4.7p1 Debian 8ubuntu1 (protocol 2.0)",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 8
+    },
+    {
+      "puerto": 23,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "telnet",
+      "version": "Linux telnetd",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 10
+    },
+    {
+      "puerto": 25,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "smtp",
+      "version": "Postfix smtpd",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 12
+    },
+    {
+      "puerto": 53,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "domain",
+      "version": "ISC BIND 9.4.2",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 14
+    },
+    {
+      "puerto": 80,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "http",
+      "version": "Apache httpd 2.2.8 ((Ubuntu) DAV/2)",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 15
+    },
+    {
+      "puerto": 111,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "rpcbind",
+      "version": "2 (RPC #100000)",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 17
+    },
+    {
+      "puerto": 139,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "netbios-ssn",
+      "version": "Samba smbd 3.X - 4.X (workgroup: WORKGROUP)",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 30
+    },
+    {
+      "puerto": 445,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "netbios-ssn",
+      "version": "Samba smbd 3.X - 4.X (workgroup: WORKGROUP)",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 31
+    },
+    {
+      "puerto": 512,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "exec",
+      "version": "netkit-rsh rexecd",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 32
+    },
+    {
+      "puerto": 513,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "login",
+      "version": "OpenBSD or Solaris rlogind",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 34
+    },
+    {
+      "puerto": 514,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "shell",
+      "version": "Netkit rshd",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 35
+    },
+    {
+      "puerto": 1099,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "java-rmi",
+      "version": "GNU Classpath grmiregistry",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 37
+    },
+    {
+      "puerto": 1524,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "bindshell",
+      "version": "Metasploitable root shell",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 38
+    },
+    {
+      "puerto": 2049,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "nfs",
+      "version": "2-4 (RPC #100003)",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 40
+    },
+    {
+      "puerto": 2121,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "ftp",
+      "version": "ProFTPD 1.3.1",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 41
+    },
+    {
+      "puerto": 3306,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "mysql",
+      "version": "MySQL 5.0.51a-3ubuntu5",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 43
+    },
+    {
+      "puerto": 3632,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "distccd",
+      "version": "distccd v1 ((GNU) 4.2.4 (Ubuntu 4.2.4-1ubuntu4))",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 46
+    },
+    {
+      "puerto": 5432,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "postgresql",
+      "version": "PostgreSQL DB 8.3.0 - 8.3.7",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 47
+    },
+    {
+      "puerto": 5900,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "vnc",
+      "version": "VNC (protocol 3.3)",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 48
+    },
+    {
+      "puerto": 6000,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "X11",
+      "version": "(access denied)",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 50
+    },
+    {
+      "puerto": 6667,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "irc",
+      "version": "UnrealIRCd",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 51
+    },
+    {
+      "puerto": 6697,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "irc",
+      "version": "UnrealIRCd",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 54
+    },
+    {
+      "puerto": 8009,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "ajp13",
+      "version": "Apache Jserv (Protocol v1.3)",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 57
+    },
+    {
+      "puerto": 8180,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "http",
+      "version": "Apache Tomcat/Coyote JSP engine 1.1",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 58
+    },
+    {
+      "puerto": 8787,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "drb",
+      "version": "Ruby DRb RMI (Ruby 1.8; path /usr/lib/ruby/1.8/drb)",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 60
+    },
+    {
+      "puerto": 37632,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "nlockmgr",
+      "version": "1-4 (RPC #100021)",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 61
+    },
+    {
+      "puerto": 44976,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "java-rmi",
+      "version": "GNU Classpath grmiregistry",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 62
+    },
+    {
+      "puerto": 49671,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "status",
+      "version": "1 (RPC #100024)",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 63
+    },
+    {
+      "puerto": 52794,
+      "protocolo": "tcp",
+      "estado": "open",
+      "servicio": "mountd",
+      "version": "1-3 (RPC #100005)",
+      "evidence_id": "01_nmap_full",
+      "linea_origen": 64
+    }
+  ]
+}
