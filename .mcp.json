@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "conocimiento-tecnico": {
+      "command": "C:\\Python314\\python.exe",
+      "args": ["mcp/conocimiento_tecnico/server.py"]
+    }
+  }
+}

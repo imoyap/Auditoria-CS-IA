@@ -1,0 +1,13 @@
+{
+  "fuente": "MITRE CWE (https://cwe.mitre.org/), subconjunto curado a mano para los servicios esperados en Metasploitable2",
+  "entradas": [
+    {"id": "CWE-319", "nombre": "Cleartext Transmission of Sensitive Information", "nombre_es": "Transmisión de información sensible en texto claro"},
+    {"id": "CWE-798", "nombre": "Use of Hard-coded Credentials", "nombre_es": "Uso de credenciales embebidas en el código o la configuración"},
+    {"id": "CWE-287", "nombre": "Improper Authentication", "nombre_es": "Autenticación incorrecta o insuficiente"},
+    {"id": "CWE-778", "nombre": "Insufficient Logging", "nombre_es": "Registro insuficiente"},
+    {"id": "CWE-912", "nombre": "Hidden Functionality", "nombre_es": "Funcionalidad oculta"},
+    {"id": "CWE-200", "nombre": "Exposure of Sensitive Information to an Unauthorized Actor", "nombre_es": "Exposición de información sensible a un actor no autorizado"},
+    {"id": "CWE-284", "nombre": "Improper Access Control", "nombre_es": "Control de acceso incorrecto"},
+    {"id": "CWE-522", "nombre": "Insufficiently Protected Credentials", "nombre_es": "Credenciales insuficientemente protegidas"}
+  ]
+}
