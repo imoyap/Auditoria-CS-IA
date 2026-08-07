@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Reporte Final de Auditoría — Comercial Andes Sur SpA</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: -apple-system, Segoe UI, Arial, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; line-height: 1.5; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 1.6rem; border-bottom: 3px solid #1a1a1a; padding-bottom: 0.5rem; }
+  h2 { font-size: 1.2rem; margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: 0.3rem; }
+  h3 { font-size: 1.05rem; margin-top: 1.5rem; }
+  .meta { color: #555; margin-bottom: 1.5rem; }
+  .resumen { background: #f5f5f5; border-left: 4px solid #444; padding: 0.8rem 1rem; margin: 1rem 0; }
+  .hallazgo { border: 1px solid #ddd; border-radius: 6px; padding: 1rem 1.2rem; margin: 1.2rem 0; page-break-inside: avoid; }
+  .id { font-family: monospace; background: #eee; padding: 0.1rem 0.4rem; border-radius: 3px; }
+  .badge { float: right; font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 10px; color: #fff; }
+  .estado-validado { background: #b91c1c; }
+  .estado-observado { background: #b45309; }
+  .estado-inconcluso { background: #6b7280; }
+  .aplica-porque { font-style: italic; color: #333; }
+  table.detalle { width: 100%; border-collapse: collapse; margin-top: 0.6rem; font-size: 0.9rem; }
+  table.detalle th { text-align: left; width: 220px; vertical-align: top; padding: 0.35rem 0.5rem; background: #fafafa; border: 1px solid #e5e5e5; }
+  table.detalle td { padding: 0.35rem 0.5rem; border: 1px solid #e5e5e5; }
+  .no-observado { color: #888; font-style: italic; }
+  .advertencia { margin-top: 2.5rem; padding: 1rem; border: 1px solid #999; background: #fffbea; font-size: 0.9rem; }
+  @media print { .hallazgo { break-inside: avoid; } body { margin: 0; } }
+  @media (prefers-color-scheme: dark) {
+    body { background: #121212; color: #e5e5e5; }
+    .resumen { background: #1e1e1e; }
+    .hallazgo { border-color: #333; }
+    table.detalle th { background: #1a1a1a; border-color: #333; }
+    table.detalle td { border-color: #333; }
+    .advertencia { background: #2a2410; border-color: #665; }
+    .id { background: #222; }
+  }
+</style>
+</head>
+<body>
+  <h1>Reporte Final de Auditoría — Comercial Andes Sur SpA</h1>
+  <p class="meta"><strong>Activo evaluado:</strong> SRV-ADM-01 (Metasploitable2, 192.168.56.117)</p>
+
+  <h2>Resumen Ejecutivo</h2>
+  <div class="resumen">
+    <p>Total de hallazgos: 4 (Crítica: 1, Alta: 1, Media: 0, Baja: 0 + 2 sin severidad técnica asignable (sin CVE/CVSS catalogado, o verificación aún pendiente — ver columna Estado por hallazgo))</p>
+    <p style="font-size:0.85rem;color:#666;">Cifras calculadas por agregación directa sobre los hallazgos verificados (control CT-05).</p>
+  </div>
+
+  <h2>Hallazgos</h2>
+  
+    <section class="hallazgo">
+      <h3><span class="id">H-01</span> — Bindshell root sin autenticacion expuesto en 1524/tcp (Metasploitable root shell)
+        <span class="badge estado-validado">VALIDADO</span>
+      </h3>
+      <p class="aplica-porque">SRV-ADM-01 es el servidor de administracion interna de Comercial Andes Sur, alcanzable desde la misma red corporativa plana donde trabajan las 140 personas de la dotacion. Un shell root sin autenticacion en 1524/tcp entrega control total del host a cualquiera que alcance esa red, incluyendo ruta lateral hacia los sistemas que tratan datos de clientes (nombre, RUT, direccion, telefono, historial de compra) y datos sensibles de trabajadores (licencias medicas), lo que activa el deber de seguridad de la Ley 21.719 sobre ese tratamiento.</p>
+      <table class="detalle">
+        <tr><th>CWE</th><td>CWE-284</td></tr>
+<tr><th>CVE</th><td><span class="no-observado">NO_OBSERVADO</span></td></tr>
+<tr><th>Vector CVSS</th><td><span class="no-observado">NO_OBSERVADO</span></td></tr>
+<tr><th>Impacto (I)</th><td>5</td></tr>
+<tr><th>Probabilidad (P)</th><td>3</td></tr>
+<tr><th>Riesgo inherente</th><td>15</td></tr>
+<tr><th>Control ISO/IEC 27001:2022</th><td>A.8.21 Seguridad de servicios de red</td></tr>
+<tr><th>NIST CSF 2.0</th><td>PR.PS-01 Gestion de configuracion</td></tr>
+<tr><th>Control CIS v8</th><td>4.8 Desinstalar servicios innecesarios</td></tr>
+<tr><th>Obligación normativa CL</th><td>Ley21719 (Proteccion de Datos Personales) - deber de adoptar medidas de seguridad apropiadas al riesgo del tratamiento</td></tr>
+<tr><th>Evidencia requerida</th><td>Estandar de configuracion segura del host que prohiba shells remotos sin autenticacion; inventario de servicios activos en SRV-ADM-01 con justificacion de negocio de cada puerto abierto; registro de la verificacion de integridad del binario/paquete que origina el bindshell; resultado de la reverificacion posterior al cierre del puerto 1524/tcp.</td></tr>
+<tr><th>Brecha</th><td>No existe proceso de hardening ni revision periodica de servicios expuestos en SRV-ADM-01; el host no tiene un procedimiento de baja de servicios no autorizados ni de verificacion de integridad de binarios frente a compromisos de cadena de suministro.</td></tr>
+<tr><th>Remediación / Recomendación</th><td>Bloquear de inmediato 1524/tcp en el firewall de host como contencion; identificar y eliminar el binario/servicio que abre el shell root (compatible con un troyano de cadena de suministro, no una version de software regular); verificar integridad de todo el sistema contra una imagen conocida-buena y, si se confirma compromiso, reconstruir el host antes de reconectarlo a la red de administracion.</td></tr>
+<tr><th>Esfuerzo</th><td>Alto</td></tr>
+<tr><th>Responsable</th><td>Administrador de sistemas / Equipo de Infraestructura de Comercial Andes Sur SpA</td></tr>
+<tr><th>Plazo</th><td>7 dias (contencion del puerto el mismo dia; remediacion completa dentro del plazo de banda Critica)</td></tr>
+<tr><th>Riesgo residual</th><td>5 (Medio)</td></tr>
+<tr><th>Plazo de referencia (banda)</th><td>90 días</td></tr>
+      </table>
+    </section>
+    
+
+    <section class="hallazgo">
+      <h3><span class="id">H-02</span> — vsftpd 2.3.4 con backdoor conocido embebido en el binario, puerto 21/tcp
+        <span class="badge estado-observado">OBSERVADO</span>
+      </h3>
+      <p class="aplica-porque">SRV-ADM-01 corre vsftpd 2.3.4 (version con backdoor documentado, CVE-2011-2523) en la misma red plana de administracion de Comercial Andes Sur; de activarse el backdoor, el atacante obtiene un shell que alcanza los sistemas que procesan datos personales de clientes y datos sensibles de trabajadores, exactamente el tipo de riesgo que la Ley 21.663 exige gestionar en un activo de administracion como este.</p>
+      <table class="detalle">
+        <tr><th>CWE</th><td>CWE-912</td></tr>
+<tr><th>CVE</th><td>CVE-2011-2523</td></tr>
+<tr><th>Vector CVSS</th><td>CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</td></tr>
+<tr><th>Impacto (I)</th><td>5</td></tr>
+<tr><th>Probabilidad (P)</th><td>3</td></tr>
+<tr><th>Riesgo inherente</th><td>15</td></tr>
+<tr><th>Control ISO/IEC 27001:2022</th><td>A.8.8 Gestion de vulnerabilidades tecnicas</td></tr>
+<tr><th>NIST CSF 2.0</th><td>PR.PS-02 Mantenimiento de software</td></tr>
+<tr><th>Control CIS v8</th><td>2.2 Software soportado</td></tr>
+<tr><th>Obligación normativa CL</th><td>Ley21663 (Marco de Ciberseguridad, ANCI) - deber de gestion de riesgos y reporte de incidentes de efecto significativo</td></tr>
+<tr><th>Evidencia requerida</th><td>Inventario de software instalado en SRV-ADM-01 con numero de version; procedimiento de gestion de vulnerabilidades tecnicas con SLA por severidad; registro del ultimo ciclo de actualizacion/parcheo de vsftpd.</td></tr>
+<tr><th>Brecha</th><td>No existe proceso de gestion de vulnerabilidades tecnicas ni inventario de versiones de software para los servicios expuestos en SRV-ADM-01.</td></tr>
+<tr><th>Remediación / Recomendación</th><td>Actualizar vsftpd a una version soportada (p. ej. 3.0.5) o migrar la transferencia de archivos a SFTP sobre OpenSSH; confirmar mediante banner que la version resultante ya no es 2.3.4 antes de cerrar el hallazgo (CT-04).</td></tr>
+<tr><th>Esfuerzo</th><td>Medio</td></tr>
+<tr><th>Responsable</th><td>Administrador de sistemas / Equipo de Infraestructura de Comercial Andes Sur SpA</td></tr>
+<tr><th>Plazo</th><td>7 dias</td></tr>
+<tr><th>Riesgo residual</th><td>5 (Medio)</td></tr>
+<tr><th>Plazo de referencia (banda)</th><td>90 días</td></tr>
+      </table>
+    </section>
+    
+
+    <section class="hallazgo">
+      <h3><span class="id">H-03</span> — UnrealIRCd con troyano/backdoor conocido, puertos 6667 y 6697 tcp
+        <span class="badge estado-inconcluso">INCONCLUSO</span>
+      </h3>
+      <p class="aplica-porque">El hallazgo original atribuye a SRV-ADM-01 un troyano conocido de UnrealIRCd 3.2.8.1 (CVE-2010-2075), pero evidencias/raw/01_nmap_full.txt no contiene el numero de version del servicio IRC en 6667/6697 tcp, solo mensajes NOTICE AUTH genericos de conexion. No se puede afirmar que el activo de Comercial Andes Sur corra la version troyanizada, por lo que tampoco corresponde aseverar que se activa una obligacion normativa especifica sobre un riesgo aun no confirmado (mismo criterio del Ejemplo 3 del Anexo Tecnico U3: sin verificacion no se fuerza una calificacion).</p>
+      <table class="detalle">
+        <tr><th>CWE</th><td>CWE-912</td></tr>
+<tr><th>CVE</th><td>NO_OBSERVADO (CVE-2010-2075 propuesto por ANALISTA, vetado por VERIFICADOR por CT-02: version no confirmada en evidencia)</td></tr>
+<tr><th>Vector CVSS</th><td><span class="no-observado">NO_OBSERVADO</span></td></tr>
+<tr><th>Impacto (I)</th><td>5</td></tr>
+<tr><th>Probabilidad (P)</th><td>3</td></tr>
+<tr><th>Riesgo inherente</th><td>15</td></tr>
+<tr><th>Control ISO/IEC 27001:2022</th><td>A.8.8 Gestion de vulnerabilidades tecnicas</td></tr>
+<tr><th>NIST CSF 2.0</th><td>ID.RA-01 Vulnerabilidades identificadas</td></tr>
+<tr><th>Control CIS v8</th><td>2.2 Software soportado</td></tr>
+<tr><th>Obligación normativa CL</th><td><span class="no-observado">NO_OBSERVADO</span></td></tr>
+<tr><th>Evidencia requerida</th><td>Salida de una sonda de version adicional (p. ej. banner de conexion IRC o consulta CTCP VERSION dentro del alcance autorizado) que confirme o descarte la version 3.2.8.1 de UnrealIRCd; inventario de software de SRV-ADM-01 con version del demonio IRC.</td></tr>
+<tr><th>Brecha</th><td>No existe inventario de software con numero de version para el servicio IRC de SRV-ADM-01, y la sonda de reconocimiento ejecutada (nmap -sV) no logro extraer el banner de version de este servicio en particular, dejando una brecha de visibilidad que impide confirmar o descartar el backdoor.</td></tr>
+<tr><th>Remediación / Recomendación</th><td>RECOMENDACION (no remediacion de vulnerabilidad): ampliar el alcance de una auditoria posterior con una sonda de version adicional especifica para UnrealIRCd (p. ej. captura de banner CTCP VERSION dentro del alcance autorizado) antes de programar cualquier remediacion sobre este servicio.</td></tr>
+<tr><th>Esfuerzo</th><td><span class="no-observado">NO_OBSERVADO</span></td></tr>
+<tr><th>Responsable</th><td><span class="no-observado">NO_OBSERVADO</span></td></tr>
+<tr><th>Plazo</th><td><span class="no-observado">NO_OBSERVADO</span></td></tr>
+<tr><th>Riesgo residual</th><td><span class="no-observado">NO_OBSERVADO</span></td></tr>
+<tr><th>Plazo de referencia (banda)</th><td><span class="no-observado">NO_OBSERVADO</span></td></tr>
+      </table>
+    </section>
+    
+
+    <section class="hallazgo">
+      <h3><span class="id">H-04</span> — distccd sin autenticacion permite ejecucion remota de comandos, puerto 3632/tcp
+        <span class="badge estado-observado">OBSERVADO</span>
+      </h3>
+      <p class="aplica-porque">distccd v1 esta expuesto en 3632/tcp de SRV-ADM-01 sin ninguna lista de control de acceso, permitiendo ejecucion remota de comandos arbitrarios (CVE-2004-2687) a cualquiera que alcance la red plana de administracion de Comercial Andes Sur; dado que este host es el servidor de administracion interna, su compromiso habilita pivoteo hacia los sistemas que tratan datos personales de clientes y datos sensibles de trabajadores, el tipo de riesgo que la Ley 21.663 exige gestionar y, de materializarse, reportar.</p>
+      <table class="detalle">
+        <tr><th>CWE</th><td>CWE-284</td></tr>
+<tr><th>CVE</th><td>CVE-2004-2687</td></tr>
+<tr><th>Vector CVSS</th><td>AV:N/AC:M/Au:N/C:C/I:C/A:C</td></tr>
+<tr><th>Impacto (I)</th><td>5</td></tr>
+<tr><th>Probabilidad (P)</th><td>3</td></tr>
+<tr><th>Riesgo inherente</th><td>15</td></tr>
+<tr><th>Control ISO/IEC 27001:2022</th><td>A.8.21 Seguridad de servicios de red</td></tr>
+<tr><th>NIST CSF 2.0</th><td>PR.PS-01 Gestion de configuracion</td></tr>
+<tr><th>Control CIS v8</th><td>4.1 Proceso de configuracion segura</td></tr>
+<tr><th>Obligación normativa CL</th><td>Ley21663 (Marco de Ciberseguridad, ANCI) - deber de gestion de riesgos y reporte de incidentes de efecto significativo</td></tr>
+<tr><th>Evidencia requerida</th><td>Inventario de servicios expuestos en SRV-ADM-01 con justificacion de negocio; procedimiento de baja de servicios de compilacion distribuida no productivos; registro de la reconfiguracion o desinstalacion de distccd y de la prueba de verificacion posterior (puerto cerrado o restringido).</td></tr>
+<tr><th>Brecha</th><td>No existe control de acceso a nivel de red ni de aplicacion para servicios de compilacion distribuida; el servicio quedo expuesto en un host de administracion sin evaluacion de necesidad de negocio ni proceso de configuracion segura.</td></tr>
+<tr><th>Remediación / Recomendación</th><td>Desinstalar distccd de SRV-ADM-01 si no hay necesidad de negocio vigente; si se requiere compilacion distribuida, restringirla a una red interna segmentada con lista de hosts permitidos (--allow) y sin exposicion directa a la red corporativa plana; bloquear 3632/tcp en el firewall de host mientras se aplica el cambio.</td></tr>
+<tr><th>Esfuerzo</th><td>Medio</td></tr>
+<tr><th>Responsable</th><td>Administrador de sistemas / Equipo de Infraestructura de Comercial Andes Sur SpA</td></tr>
+<tr><th>Plazo</th><td>7 dias</td></tr>
+<tr><th>Riesgo residual</th><td>5 (Medio)</td></tr>
+<tr><th>Plazo de referencia (banda)</th><td>90 días</td></tr>
+      </table>
+    </section>
+    
+
+  <div class="advertencia">
+    <strong>Advertencia</strong><br>
+    Este documento constituye un análisis técnico de controles de seguridad y su correspondencia con obligaciones normativas. No sustituye asesoría legal. La calificación jurídica definitiva de la organización, sus roles y sus obligaciones debe ser validada por abogado. La normativa chilena de ciberseguridad y protección de datos se encuentra en despliegue por etapas; los criterios sujetos a reglamento pendiente se señalan como tales.
+  </div>
+</body>
+</html>
