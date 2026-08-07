@@ -2,6 +2,21 @@
 
 Complemento de `docs/GUION_VIDEO.md`. Cada comando de abajo fue probado real antes de escribirse aquí (2026-08-07) — cópialos y pégalos tal cual en la terminal durante la grabación. Ejecutar desde la raíz del repositorio, en Git Bash (o WSL/Linux si el equipo de grabación usa otro shell — son comandos POSIX estándar).
 
+## Paso 0 — ANTES de empezar a grabar (obligatorio en Windows/Git Bash)
+
+La consola de Windows por defecto usa la página de códigos 850 (DOS), no UTF-8 — con eso, cualquier texto con tildes/eñes se ve roto en pantalla (`Cr�tico` en vez de `Crítico`), aunque el dato real esté correcto. Antes de grabar, en la misma terminal que van a usar:
+
+```bash
+chcp.com 65001
+export PYTHONIOENCODING=utf-8
+```
+
+Verificar que quedó bien:
+```bash
+python3 -c "print('Prueba: Crítico, § válido, año')"
+```
+Debe verse exactamente así, sin ningún `�`. Si se abre una terminal nueva para grabar, repetir este paso — no es permanente entre sesiones de terminal.
+
 ---
 
 ## Bloque 1 — Presentación
