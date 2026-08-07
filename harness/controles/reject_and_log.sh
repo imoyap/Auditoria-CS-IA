@@ -69,6 +69,7 @@ SCRIPTS_PROPIOS = {
         r"\.claude/skills/redactar/scripts/generar_reporte\.py",
         r"\.claude/skills/priorizar/scripts/priorizar\.py",
     ],
+    "CONTRADICTOR": [r"\.claude/skills/objetar/scripts/registrar_objecion\.py"],
 }
 
 METACARACTERES_PROHIBIDOS = [";", "&&", "||", "`", "$(", ">", "<", "|", "\n"]
