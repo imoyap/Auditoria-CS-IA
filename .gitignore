@@ -30,3 +30,6 @@ data/auditoria.db
 # Estado de ejecución del harness U3 (regenerable) — el registro persistente
 # real vive en LEDGER.md, no aquí
 harness/estado.json
+
+# Archivos de bloqueo temporal de Office (creados al abrir un .md/.docx en Word)
+~$*
