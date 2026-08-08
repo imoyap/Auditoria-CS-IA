@@ -35,6 +35,23 @@ ALLOWLIST="${REPO_ROOT}/scope/allowlist.txt"
 
 INPUT_JSON="$(cat)"
 
+# Resolución explícita del intérprete Python: "python3" en PATH resuelve a
+# instalaciones distintas según qué shell lanzó este script (Git Bash directo
+# vs. bash invocado desde PowerShell) -- una de ellas es un Python mínimo sin
+# el paquete "yaml" instalado. Se prueba una lista de candidatos y se usa el
+# primero que realmente pueda importar yaml, en vez de asumir "python3" a
+# secas. Bug real encontrado grabando el video (T-043) desde PowerShell.
+resolver_python() {
+  for candidato in "/c/Python314/python.exe" "python3" "python"; do
+    if command -v "$candidato" >/dev/null 2>&1 && "$candidato" -c "import yaml" >/dev/null 2>&1; then
+      echo "$candidato"
+      return 0
+    fi
+  done
+  echo "python3"  # último recurso -- fallará más abajo con un error claro si tampoco tiene yaml
+}
+PYTHON_BIN="$(resolver_python)"
+
 log_rechazo() {
   local motivo="$1"
   local ts
@@ -44,11 +61,15 @@ log_rechazo() {
     "$ts" "$id" "$ROL" "$motivo" >> "$LEDGER"
 }
 
-DECISION="$(HOOK_INPUT_JSON="$INPUT_JSON" python3 - "$ROL" "$ALCANCE" "$ALLOWLIST" <<'PYEOF'
+DECISION="$(HOOK_INPUT_JSON="$INPUT_JSON" "$PYTHON_BIN" - "$ROL" "$ALCANCE" "$ALLOWLIST" <<'PYEOF'
 import json, os, re, sys, yaml
 
 rol, alcance_path, allowlist_path = sys.argv[1], sys.argv[2], sys.argv[3]
-payload = json.loads(os.environ["HOOK_INPUT_JSON"])
+# PowerShell antepone un BOM UTF-8 al texto cuando se canaliza (|) a un
+# programa externo -- json.loads lo rechaza si no se retira antes. Bug real
+# encontrado grabando el video (T-043) desde una terminal PowerShell.
+_entrada = os.environ["HOOK_INPUT_JSON"].lstrip("﻿")
+payload = json.loads(_entrada)
 tool = payload.get("tool_name", "")
 tool_input = payload.get("tool_input", {}) or {}
 

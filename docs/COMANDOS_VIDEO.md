@@ -1,6 +1,8 @@
 # Comandos listos para grabar — T-043
 
-Complemento de `docs/GUION_VIDEO.md`. Cada comando de abajo fue probado real antes de escribirse aquí (2026-08-07) — cópialos y pégalos tal cual en la terminal durante la grabación. Ejecutar desde la raíz del repositorio, en Git Bash (o WSL/Linux si el equipo de grabación usa otro shell — son comandos POSIX estándar).
+Complemento de `docs/GUION_VIDEO.md`. Cada comando de abajo fue probado real antes de escribirse aquí (2026-08-07) — cópialos y pégalos tal cual en la terminal durante la grabación. Ejecutar desde la raíz del repositorio, **en Git Bash**.
+
+**¿Van a grabar desde una terminal PowerShell en vez de Git Bash?** Usen `docs/COMANDOS_VIDEO_POWERSHELL.md` en su lugar — la sintaxis de varios comandos (heredocs, `bash`, fechas) es distinta y ya está adaptada y probada ahí.
 
 ## Paso 0 — ANTES de empezar a grabar (obligatorio en Windows/Git Bash)
 
