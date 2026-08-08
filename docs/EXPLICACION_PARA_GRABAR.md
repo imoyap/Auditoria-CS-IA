@@ -4,6 +4,28 @@ Este documento traduce `docs/GUION_VIDEO.md` a lenguaje llano, con frases que pu
 
 ---
 
+## Relato completo, sin comandos (para contar la historia del proyecto de corrido)
+
+Esta sección es para narrar de principio a fin, hablando, sin necesidad de mostrar ni ejecutar nada en pantalla — útil como introducción, como respuesta si el docente pregunta "cuéntenme cómo lo hicieron", o como guion de voz en off.
+
+> "El docente nos entregó el proyecto base de dos formas: un repositorio en su cuenta pública de GitHub, del cual hicimos un fork a nuestra propia cuenta, y el mismo proyecto comprimido en un Drive compartido. Descargamos ese archivo, lo descomprimimos en nuestro computador, y abrimos esa carpeta en Visual Studio Code para empezar a trabajar.
+>
+> Dentro de esa carpeta ya venían dos documentos clave del docente: el Anexo Técnico, que describe en detalle cómo debía construirse un sistema de auditoría con inteligencia artificial usando varios roles separados, y la Rúbrica de evaluación, con los criterios exactos que se iban a calificar.
+>
+> Usamos Claude Code, un asistente de inteligencia artificial integrado en Visual Studio Code, para construir el proyecto siguiendo esos documentos paso a paso. Primero se hizo un análisis comparando lo que ya existía en la carpeta contra lo que el Anexo exigía, para saber qué se podía reutilizar y qué había que construir de cero. Después se definieron los requisitos, el diseño de la arquitectura, y un plan de tareas concreto.
+>
+> A partir de ahí, se construyó el sistema: cinco roles de inteligencia artificial, cada uno con permisos técnicos limitados a exactamente lo que le corresponde hacer — uno recolecta evidencia, otro la analiza y propone posibles hallazgos, otro los verifica y puede rechazarlos si la evidencia no alcanza, otro los cruza con normativa legal, y el último redacta el informe final. Ningún rol puede hacer el trabajo de otro, y esto no es una regla que le pedimos a la IA que respetara — es una restricción técnica real del sistema, verificada muchas veces durante la construcción.
+>
+> Con el sistema ya armado, lo ejecutamos de verdad contra una máquina de laboratorio llamada Metasploitable2, en la dirección 192.168.56.117, dentro de una ventana de tiempo autorizada y sin nunca explotar activamente ninguna vulnerabilidad. Se capturó evidencia real, se propusieron y verificaron hallazgos, y en los momentos más importantes del proceso, el sistema se detuvo solo, de verdad, a esperar que una persona del equipo confirmara con su nombre y la fecha antes de continuar — eso pasó tres veces durante todo el proceso.
+>
+> Cada decisión que se tomó, cada error que se encontró en el camino, y cada momento en que el sistema rechazó algo, quedó registrado con fecha y hora real en una bitácora — eso es lo que nos permite hoy mostrarles, con evidencia, que el proceso fue real y no inventado después.
+>
+> Al final, se generó el informe final del cliente, se subió todo el trabajo a nuestra rama en GitHub, y publicamos el informe en una página web para que cualquiera pueda revisarlo."
+
+Eso es todo el relato — dura entre 1 y 2 minutos hablado con calma. Pueden dividirlo entre los integrantes (por ejemplo, una persona cuenta el origen y la arquitectura, otra cuenta la ejecución real y el cierre).
+
+---
+
 ## La idea general (memorizar esto, es la base de todo)
 
 > "Construimos un sistema donde 5 roles de inteligencia artificial hacen una auditoría de seguridad, pero **ninguno tiene permiso para hacer más de lo que le corresponde**. El que revisa evidencia no puede escribir el reporte. El que verifica un hallazgo no puede darlo por válido él solo — eso lo tiene que confirmar una persona real, con su nombre y fecha. Y todo lo que pasa queda registrado en una bitácora con la hora exacta, para que se pueda comprobar que nada se inventó."
