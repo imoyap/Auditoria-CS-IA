@@ -12,6 +12,22 @@ Esa es la frase que sostiene todo el video. Todo lo demás es mostrar evidencia 
 
 ---
 
+## Bloque 0 (opcional) — Cómo se armó el entorno de trabajo
+
+Esto no es uno de los 6 bloques obligatorios de la rúbrica, pero si quieren mostrar profesionalismo en la gestión de versiones, o si el docente pregunta "¿cómo organizaron el repositorio?", esta es la secuencia real, verificada contra el historial de git (no es una reconstrucción de memoria):
+
+> "El docente creó un repositorio base en su cuenta pública de GitHub y también subió el mismo proyecto comprimido a un Drive compartido. Nosotros hicimos un fork de la rama del docente a nuestra propia cuenta de GitHub — eso nos dio una copia independiente para trabajar sin afectar el repositorio original. Por separado, descargamos el archivo comprimido del Drive, lo descomprimimos en una carpeta de nuestro computador, y abrimos esa carpeta en Visual Studio Code."
+>
+> "Dentro de esa carpeta local inicializamos nuestro propio control de versiones y ahí construimos todo el pipeline de auditoría de 5 roles — cada archivo, cada decisión, con fecha y hora real registrada en nuestra bitácora. Al terminar, conectamos ese trabajo local con el fork que ya teníamos en GitHub, y lo subimos a una rama nueva, para no sobrescribir la rama principal que había heredado el historial del repositorio del docente."
+
+Si preguntan por qué no se subió directamente a la rama principal (`main`): porque esa rama ya tenía el historial heredado del fork, y sobrescribirla habría borrado ese contenido — se optó por la vía segura de usar una rama nueva.
+
+### Cómo se fue construyendo el proyecto con Claude Code
+
+> "Trabajamos con Claude Code, un asistente de inteligencia artificial, integrado directamente en Visual Studio Code como una consola. La forma de trabajar fue: nosotros le entregábamos los documentos que el docente nos dio — el Anexo Técnico, la Rúbrica de evaluación, las instrucciones del curso — colocándolos dentro de la carpeta `docs/` del proyecto. A medida que avanzábamos, cuando la IA necesitaba un dato que no tenía (por ejemplo, la dirección IP real de la máquina, o una confirmación de alcance), nos lo pedía explícitamente antes de continuar, y nosotros se lo entregábamos. Así, paso a paso, revisando y aprobando cada decisión importante, se fue generando toda la estructura del proyecto que ven aquí."
+
+Esto es importante decirlo porque demuestra que **hubo supervisión humana real en cada paso**, no que la IA hizo todo sola sin control — que es exactamente lo que la rúbrica busca (criterio "dónde está el humano").
+
 ## Bloque 1 — Presentación
 
 Cada integrante dice su nombre. Luego, uno explica el encargo:
@@ -71,6 +87,32 @@ Ejecutar la demostración de firma (bloque 5 de `docs/COMANDOS_VIDEO.md`) y deci
 > - Uno de los 4 hallazgos quedó sin poder confirmarse — no porque el sistema fallara, sino porque la evidencia real no alcanzaba, y decidimos no inventar una conclusión.
 > - Durante la construcción encontramos varios errores reales: un diseño inicial de permisos que no funcionaba y tuvimos que rediseñar, y un error donde la palabra 'Crítica' con tilde no se contaba bien en el resumen del reporte.
 > - Y la ventana de tiempo autorizada la tuvimos que extender dos veces porque el trabajo tomó más de lo planeado."
+
+---
+
+## Las carpetas y archivos más importantes (para explicar si preguntan, o para el bloque 2)
+
+Frase de entrada sugerida:
+
+> "El proyecto está organizado en carpetas, cada una con un propósito específico. Se las resumo:"
+
+| Carpeta / archivo | Qué contiene, en palabras simples |
+|---|---|
+| **`docs/`** | Toda la documentación del proyecto: los documentos que nos dio el docente (`anexo_tecnico_u3.md`, `rubrica_evaluacion_u3.md`), y los que fuimos generando nosotros a medida que avanzábamos — el análisis inicial (`GAP_ANALYSIS.md`), los requisitos (`requirements.md`), el diseño (`design.md`), el plan de tareas (`tasks.md`), y los guiones para este mismo video. |
+| **`scope/`** | El **alcance autorizado** de la auditoría: `alcance.yaml` dice exactamente qué máquina se puede auditar, en qué horario, y con qué reglas (nunca explotar, nunca salirse del rango). También está `declaracion_etica.md`, firmada por los integrantes, y `allowlist.txt`, la lista exacta de comandos permitidos. |
+| **`roles/`** | Una descripción en texto de cada uno de los 5 roles del sistema (qué hace, qué NO puede hacer, y con qué "voz" actúa) — es la documentación humana de lo que después se implementó técnicamente en `.claude/agents/`. |
+| **`.claude/agents/`** | La implementación técnica real de cada rol — el archivo que le dice al sistema exactamente qué herramientas tiene permitidas cada uno (por ejemplo, `verificador.md` no tiene permiso de escritura). |
+| **`.claude/skills/`** | Las herramientas concretas (scripts) que cada rol puede ejecutar — una carpeta por tarea (`enumerar`, `clasificar`, `correlacionar`, `redactar`, etc.). |
+| **`evidencias/`** | La evidencia **real** recolectada de la máquina auditada: el resultado completo del escaneo (`raw/01_nmap_full.txt`), una captura de pantalla que confirma la IP de la máquina, y un archivo con el "huella digital" (hash) de cada evidencia, para probar que no fue alterada después. |
+| **`normalizado/`** | Los datos ya procesados: el inventario de todos los servicios encontrados (`inventario.json`), los hallazgos candidatos y su estado final (`candidatos.json`), y la tabla que los cruza con normativa legal (`matriz_borrador.csv`). |
+| **`gates/`** | Los "puntos de control" (G0 a G5) — cada uno es un archivo que dice qué se revisó, quién lo aprobó, y (en los tres más importantes) quién lo firmó con su nombre real. |
+| **`harness/`** | El motor que controla todo el flujo — el "director de orquesta" que avanza etapa por etapa y se detiene a pedir firma humana cuando corresponde. |
+| **`mcp/`** | Dos "bases de consulta" que los roles usan para no inventar información: una con vulnerabilidades conocidas (CWE/CVSS), otra con normativa (ISO, NIST, leyes chilenas). |
+| **`reporte/`** | **El entregable final** — el informe completo, en Markdown y en HTML, listo para presentar. |
+| **`LEDGER.md`** | La bitácora — el archivo más importante para demostrar honestidad: cada decisión, cada rechazo, cada firma, con fecha y hora real de cuando ocurrió. |
+| **`README.md`** | La puerta de entrada del proyecto — resume todo el flujo de 10 etapas y dónde interviene cada rol, para alguien que recién abre el repositorio. |
+
+> "No hace falta que memoricemos cada archivo — lo importante es que quede claro que cada carpeta tiene un propósito específico, y que nada se mezcla: la evidencia real está separada de los datos procesados, y esos están separados del reporte final."
 
 ---
 
