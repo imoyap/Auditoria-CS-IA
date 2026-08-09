@@ -4,7 +4,7 @@
 
 📄 **[Ver el informe final de la auditoría (HTML)](https://mcarreral.github.io/Auditoria-CS-IA/reporte/reporte_final.html)** — reporte completo con los 4 hallazgos reales, controles ISO/NIST/CIS y advertencia legal, publicado con GitHub Pages.
 
-🎥 **[Ver el video de la Actividad de Cierre](https://1drv.ms/v/c/abc93e6c38f5fac8/IQDdZAsU8epKQrE3wCag65zFAeSjwllu6j_XBEnnN9O52BY?e=RtbSZF)** — grabación con la presentación del equipo, arquitectura del pipeline, ejecución real y punto de control humano (T-043).
+🎥 **[Ver el video de la Actividad de Cierre](https://1drv.ms/v/c/abc93e6c38f5fac8/IQDdZAsU8epKQrE3wCag65zFAZQkaWkSbQ3X2mm8DIVfMOM?e=pbQmTS)** — grabación con la presentación del equipo, arquitectura del pipeline, ejecución real y punto de control humano (T-043).
 
 Este repositorio contiene, además del framework genérico descrito más abajo, el pipeline de auditoría agéntica de 5 roles construido para la Actividad de Cierre de la Unidad 3 (`docs/anexo_tecnico_u3.md`, `docs/rubrica_evaluacion_u3.md`). El detalle completo de diseño, requisitos y decisiones vive en `docs/`:
 
