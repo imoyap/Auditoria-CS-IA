@@ -2,6 +2,8 @@
 
 ## Pipeline de auditoría agéntica — Unidad 3 (Diplomado en Ciberseguridad)
 
+📄 **[Ver el informe final de la auditoría (HTML)](https://mcarreral.github.io/Auditoria-CS-IA/reporte/reporte_final.html)** — reporte completo con los 4 hallazgos reales, controles ISO/NIST/CIS y advertencia legal, publicado con GitHub Pages.
+
 Este repositorio contiene, además del framework genérico descrito más abajo, el pipeline de auditoría agéntica de 5 roles construido para la Actividad de Cierre de la Unidad 3 (`docs/anexo_tecnico_u3.md`, `docs/rubrica_evaluacion_u3.md`). El detalle completo de diseño, requisitos y decisiones vive en `docs/`:
 
 - `docs/GAP_ANALYSIS.md` (Fase 0) — inventario contra el Anexo Técnico.
