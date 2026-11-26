@@ -11,6 +11,14 @@ from typing import Any, Optional
 from auditoria.core.models import AuditReport
 
 
+def _to_db_timestamp(value: Any) -> Any:
+    """Serializa datetime como hacía el adaptador por defecto de sqlite3
+    (deprecado en Python 3.12): ISO 8601 con espacio como separador."""
+    if isinstance(value, datetime):
+        return value.isoformat(" ")
+    return value
+
+
 class DatabaseManager:
     """Gestiona persistencia de auditorías en SQLite."""
 
@@ -93,8 +101,8 @@ class DatabaseManager:
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             report.target,
-            report.started_at,
-            report.finished_at,
+            _to_db_timestamp(report.started_at),
+            _to_db_timestamp(report.finished_at),
             report.risk_score,
             modules,
             summary.get("total_findings", 0),

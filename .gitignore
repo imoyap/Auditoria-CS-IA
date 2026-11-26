@@ -33,3 +33,8 @@ harness/estado.json
 
 # Archivos de bloqueo temporal de Office (creados al abrir un .md/.docx en Word)
 ~$*
+
+# Secretos
+.env
+.env.*
+!.env.example
