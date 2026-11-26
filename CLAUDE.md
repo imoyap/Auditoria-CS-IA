@@ -15,7 +15,9 @@ Audita sistema, red/DNS/puertos, certificados SSL/TLS, permisos de archivos y se
 - `scripts/run_api.py` servidor API · `tests/` pytest (`test_auditoria.py`, `e2e/`) · `specs/` roadmap v2.0 · `docs/`
 
 ## Git
-- Rama de trabajo: `u3-pipeline-agentico`. `origin` = fork mcarreral/Auditoria-CS-IA; `upstream` = cherrera0001/Auditoria-CS-IA (original). No hacer push sin pedirlo.
+- Rama de trabajo: `u3-pipeline-agentico` (sigue a `team/u3-pipeline-agentico`).
+- Remotos: `origin` = imoyap/Auditoria-CS-IA (fork propio, con escritura); `team` = mcarreral/Auditoria-CS-IA (equipo, sin escritura: cambios vía PR); `upstream` = cherrera0001/Auditoria-CS-IA (original).
+- No hacer push sin pedirlo (además está bloqueado en settings.json).
 
 ## Pipeline agéntico U3 (rama `u3-pipeline-agentico`)
 Actividad de Cierre de la Unidad 3 (Diplomado en Ciberseguridad). Es independiente del framework `auditoria/` y no lo importa.
