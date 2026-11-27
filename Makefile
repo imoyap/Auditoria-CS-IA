@@ -47,7 +47,7 @@ run:
 	auditoria audit --target localhost
 
 api:
-	python scripts/run_api.py
+	python scripts/run_api.py --host 127.0.0.1 --port 5000 --db-path data/auditoria.db --webhooks-path data/webhooks.json
 
 docs:
 	@echo "Documentation is in docs/ directory"

@@ -11,8 +11,11 @@ def main():
     )
     parser.add_argument(
         "--host",
-        default="0.0.0.0",
-        help="Host en el que escuchar (default: 0.0.0.0)",
+        default="127.0.0.1",
+        help=(
+            "Host en el que escuchar (default: 127.0.0.1). La API no tiene "
+            "autenticación: usar 0.0.0.0 la expone a toda la red."
+        ),
     )
     parser.add_argument(
         "--port",

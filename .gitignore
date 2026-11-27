@@ -25,6 +25,7 @@ docs/image.png
 
 # Artefactos binarios / runtime del framework auditoria/ existente
 data/auditoria.db
+data/webhooks.json
 .claude/scheduled_tasks.lock
 
 # Estado de ejecución del harness U3 (regenerable) — el registro persistente

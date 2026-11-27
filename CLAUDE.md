@@ -38,7 +38,8 @@ cryptography, dnspython, jinja2 (informes), rich (salida de consola), requests, 
 - Test del pipeline U3 (script propio, no pytest): `python .claude/skills/clasificar/scripts/test_calcular_riesgo.py`
 - Lint: `make lint` (flake8 + mypy) · Formato: `make format` (black + isort) — estas herramientas NO están en los extras `dev`; instalarlas aparte
 - Ejecutar CLI: `make run` (= `auditoria audit --target localhost`); ej. `auditoria audit --target example.com --modules network ssl`
-- API local: `make api` (= `python scripts/run_api.py`, puerto 5000)
+- API local: `make api` → http://127.0.0.1:5000 (BD en `data/auditoria.db`, webhooks en `data/webhooks.json`, ambos ignorados por git). Comprobar: `Invoke-RestMethod http://127.0.0.1:5000/health`
+- La API NO tiene autenticación (15 endpoints, incluidos lanzar auditorías y registrar webhooks): mantenerla en 127.0.0.1; no usar `--host 0.0.0.0` ni publicarla fuera del equipo sin añadir auth
 - `make clean` usa `rm`/`find` de Unix y BORRA `data/audit-results`, `data/reports`, `data/logs`: no ejecutarlo sin confirmación
 - Servicios: `docker compose up -d` · `docker compose ps` · `docker compose logs -f`
   (api:5000, postgres:5432, prometheus:9090, grafana:3000, redis:6379)
