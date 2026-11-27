@@ -50,11 +50,12 @@ cryptography, dnspython, jinja2 (informes), rich (salida de consola), requests, 
 - `.env` debe estar en `.gitignore`.
 
 ## Pendientes conocidos
-1. Falta `.env.example` (solo nombres: `ANTHROPIC_API_KEY`, `DB_PASSWORD`, `GRAFANA_PASSWORD`); las reglas deny impiden a Claude crearlo.
-4. `docker-compose.yml` construye `docker/Dockerfile`, que no existe en el repo: el servicio `api` no puede arrancar.
-5. `docker-compose.yml` monta `config/prometheus.yml`, que no existe (solo hay `config/README.md`).
-6. Imágenes `prom/prometheus` y `grafana/grafana` en `:latest`; fijar versiones.
-7. `make clean` no funciona en PowerShell/cmd (comandos Unix).## Convenciones
+1. `docker-compose.yml` construye `docker/Dockerfile`, que no existe en el repo: el servicio `api` no puede arrancar.
+2. `docker-compose.yml` monta `config/prometheus.yml`, que no existe (solo hay `config/README.md`).
+3. Imágenes `prom/prometheus` y `grafana/grafana` en `:latest`; fijar versiones.
+4. `make clean` no funciona en PowerShell/cmd (comandos Unix).
+
+## Convenciones
 - Responder y documentar en español; identificadores de código en inglés o como ya esté en el repo.
 - Antes de cambios grandes, mostrar el plan y esperar confirmación.
 - Esta herramienta puede tratar evidencia de clientes (`evidence/`, `data/`): no enviar datos reales a servicios externos ni registrarlos en logs sin enmascarar.
